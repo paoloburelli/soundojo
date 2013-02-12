@@ -74,7 +74,7 @@ body {
 
 #player {
 	height: 200px;
-	width: 287px;
+	width: 285px;
 	position: absolute;
 	bottom: 25px;
 	margin: 2 0 0 3;
@@ -82,6 +82,8 @@ body {
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 	background-position: center center;
+	border: 1px solid #222222;
+	border-radius: 4px;
 }
 
 #footer {
