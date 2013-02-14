@@ -12,7 +12,7 @@ function adapt_to_orientation() {
 			hScale=0.555;
 	}
 
-
+	var scale;
 	if (window.orientation == 0 || window.orientation == 180) {
 		scale = vScale;
 	} else if (window.orientation == 90 || window.orientation == -90) {

@@ -149,7 +149,7 @@ var currentTrackIndex = 0;
 					tracks.sort(function () { if (Math.random()<.5) return -1; else return 1; });
 					tracks.unshift(track)
 					refillTrackList(true);					
-			},function(){});
+			},showLoadingError);
 		}
 		
 		function listen(sender, eventArgs){
