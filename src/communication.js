@@ -5,11 +5,12 @@ var lastFmArtistSearchURL = lastFmURL+"limit="+searchLimit+"&method=artist.searc
 var lastFmAlbumSearchURL = lastFmURL+"limit="+searchLimit+"&method=album.search&album="
 var lastFmTrackSearchURL = lastFmURL+"limit="+searchLimit+"&method=track.search&track="
 var lastFmSimilarTracksURL = lastFmURL+"limit=300&method=track.getSimilar"
-var lastFmArtistAlbumSearchURL = lastFmURL + "limit="+searchLimit+"&method=artist.getTopAlbums&artist="
-var lastFmArtistTopTracksSearchURL = lastFmURL+"limit=100&method=artist.getTopTracks&artist="
+var lastFmArtistAlbumSearchURL = function(searchLimit) {return lastFmURL + "limit="+searchLimit+"&method=artist.getTopAlbums&artist="}
+var lastFmArtistTopTracksSearchURL = function(artistName,limit) {return lastFmURL+"limit="+limit+"&method=artist.getTopTracks&artist="+artistName}
 var lastFmGenreTopTracksSearchURL = lastFmURL+"limit=300&method=tag.getTopTracks&tag="
 var lastFmGenreSearchURL = lastFmURL+"limit="+searchLimit+"&method=tag.search&tag="
 var lastFmAlbumGetURL = lastFmURL+"method=album.getInfo&autocorrect=1"
+var lastFmArtistGetURL = lastFmURL+"method=artist.getInfo&autocorrect=1"
 
 
 function parseJson(string){
@@ -86,6 +87,28 @@ function getAlbumInfo(album,success,fail){
 	});	
 }
 
+function getArtistInfo(artist,success,fail){
+	var url = lastFmArtistGetURL +'&artist='+artist;
+	$.get(url, function(response){
+		response = parseJson(response);
+		if (response.artist !== undefined  && response.artist.bio !== undefined)
+			success(response.artist);
+		else
+			fail();
+	});	
+}
+
+function getArtistDiscrography(artist,success,fail){
+	var url = lastFmArtistAlbumSearchURL(10) +artist.name;
+	$.get(url, function(response){
+		response = parseJson(response);
+		if (response.topalbums.album !== undefined)
+			success(response.topalbums.album);
+		else
+			fail();
+	});	
+}
+
 function findSimilarTracks(track,success,fail){
 	var url = lastFmSimilarTracksURL+'&artist='+track.artist+'&track='+track.name;
 	$.get(url, function(response){
@@ -97,13 +120,8 @@ function findSimilarTracks(track,success,fail){
  });
 }
 
-function findArtistAlbums(artist,f){
-	var url = lastFmArtistAlbumSearchURL+artist.name
-	$.get(url, f);	
-}
-
-function findArtistTopTracks(artist,success,fail){
-	var url = lastFmArtistTopTracksSearchURL+artist.name;
+function findArtistTopTracks(artist,limit,success,fail){
+	var url = lastFmArtistTopTracksSearchURL(artist.name,limit);
 	$.get(url, function(response){
 		response = parseJson(response);
 	 	if (response != "" && response.toptracks.track !== undefined)
