@@ -1,0 +1,28 @@
+<div id="albumPage">
+	<div class="ui-grid-a" id="artist-top">
+		<div class="ui-block-a" id="left">
+			<div id="portraitContainer"><img id="portrait"/>
+			</div>
+			<div class="ui-grid-a">
+				<div class="ui-block-a">
+					<button type="button" data-theme="c" data-mini="true" id="playAlbum" data-icon="arrow-r">
+						Play
+					</button>
+				</div>
+				<div class="ui-block-b">
+					<button type="button" data-theme="c" data-mini="true" id="enqueueAlbum" data-icon="plus">
+						Append
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="ui-block-b" id="right">
+			<h4>Tags</h4>
+			<div id="albumTags"></div>
+		</div>
+	</div>
+	<h2><span class="clickable" id="bandName"></span> - <span id="albumName"></span></h2>
+	<p id="wiki"></p>
+	<h3>Tracklist</h3>
+	<ol id="albumTracks" data-role="listview"></ol>
+</div>

@@ -1,0 +1,105 @@
+<html>
+
+	<head>
+		<!--[if lte IE 9]>
+		<style type="text/css">
+		#main {display:none;}
+		body {background-image: url('img/notsupported.png'); background-position: center center; background-repeat: no-repeat;}
+		</style>
+		<![endif]-->
+
+		<title>SounDoJo Beta</title>
+		<meta charset="utf-8">
+		<meta property="og:title" content="SounDoJo music player" />
+		<meta property="og:url" content="http://soundojo.com" />
+		<meta property="og:description" content="SounDoJo is a web based music player that combines YouTube and Last.fm to discover and play music for free." />
+		<meta property="og:image" content="http://www.soundojo.com/img/fb.png" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+		<meta name="description" content="SounDoJo is a web based music player. It combines multiple on-line services to deliver a great music listening experience. It allows to listen freely to an immense music library and it supports intelligent playlists."/>
+		<meta name="keywords" content="music,last.fm,web player,player,streaming"/>
+		<link rel="apple-touch-icon" href="img/icon.png"/>
+		<link rel="stylesheet" href="jquery.mobile-1.3.0/jquery.mobile-1.3.0.css" type="text/css">
+		<link rel="stylesheet" href="css/dojo.css" type="text/css">
+		<link rel="shortcut icon" href="img/favicon.ico" />
+		<script type="text/javascript" src="http://www.youtube.com/player_api"></script>
+		<script type="text/javascript" src="src/jquery-1.8.2.min.js"></script>
+		<script type="text/javascript" src="jquery.mobile-1.3.0/jquery.mobile-1.3.0.js"></script>
+		<script type="text/javascript" src="src/jquery.md5.js"></script>
+		<script type="text/javascript" src="src/utils.js"></script>
+		<script type="text/javascript" src="src/communication.js"></script>
+		<script type="text/javascript" src="src/view.js"></script>
+		<script type="text/javascript" src="src/pages.js"></script>
+		<script type="text/javascript" src="src/modelcontrol.js"></script>
+	</head>
+	<body>
+		<div data-role="page" data-theme="a" class="ui-responsive-panel" id="main">
+
+			<div data-role="popup" id="errorPopup" data-transition="pop">
+				<p></p>
+			</div>
+
+			<div data-role="panel" id="searchpanel" data-theme="a">
+				<input type="search" name="search-mini" id="searchtext" value="" data-mini="true" data-theme="c"
+				onchange="delayedSearch(this)"
+				onkeyup="delayedSearch(this)"
+				/>
+				<div id="searchingThrobber"></div>
+				<ul id="results" data-role="listview" data-inset="true"></ul>
+			</div>
+
+			<div data-role="panel" id="settingspanel" data-position="right"  data-theme="a">
+				<form data-ajax="false" onsubmit="lastFmLogin(); return false;">
+					<div data-role="fieldcontain">
+						<h3>Last.fm</h3>
+					</div>
+					<p>
+						Username
+					</p>
+					<input type="text" id="lastfmUser" name="lastfmUser" value="" data-mini="true" data-theme="c"/>
+					<p>
+						Password
+					</p>
+					<input type="password" id="lastfmPassword" value="" data-mini="true" data-theme="c"/>
+					<br/>
+					<button value="login" id="lastfmLoginButton" data-mini="true">Login</button>
+				</form>
+			</div>
+
+			<div data-role="popup" id="popup" class="ui-content">
+				<p></p>
+			</div>
+
+			<div data-role="header" id="header">
+				<a href="#searchpanel" data-icon="search" onclick="setTimeout(function(){$('#searchtext').focus()},500)">Search</a>
+				<h1 id="appLogo" ><a onclick="loadHome(); return false;" href="#home" title="SounDojo Home"><img src="img/logosmall.png" alt="SounDojo"/></a></h1>
+				<a href="#settingspanel" data-icon="gear" onclick="setTimeout(function(){$('#lastfmUser').focus()},500)" class="ui-btn-right">Options</a>
+			</div>
+
+			<div data-role="content" id="content">
+
+				<div id="infopage" class="content-primary ui-body ui-body-d"></div>
+
+				<div id="playerpage" class="content-secondary ui-body-c animated" data-theme="c">
+					<a id="trackInfoButton" data-role="button" data-theme="a" data-mini="true" data-icon="info" data-iconpos="notext"></a>
+					<div id="player" class="animated"></div>
+					<div id="controls" data-role="controlgroup" data-type="horizontal">
+						<a id="prev" data-theme="a" data-role="button" data-inline="true" onClick="prev()">Prev</a>
+						<a id="play" data-theme="a" data-role="button" data-inline="true" onClick="playpause()">Play</a>
+						<a id="next" data-theme="a" data-role="button" data-inline="true" onClick="next()">Next</a>
+						<a id="fullscreen" data-theme="a" data-role="button" data-inline="true" onClick="toggleFullScreen()">Love</a>
+						<a id="love" data-theme="a" data-role="button" data-inline="true" class="ui-disabled">Love</a>
+						<a id="ban" data-theme="a" data-role="button" data-inline="true" class="ui-disabled">Ban</a>
+					</div>
+					<ul data-role="listview" id="playlist" class="animated" data-theme="c" data-split-theme="c"></ul>
+				</div>
+			</div>
+
+			<div data-role="footer" id="footer">
+				<h4>Powered by&nbsp; <a id="lastfmLink" href="http://www.last.fm" target="_blank" title="Last.fm"><span>Last.fm</span></a><a id="youtubeLink" href="http://www.youtube.com" target="_blank" title="YouTube"><span>YouTube</span></a><a id="githubLink" href="https://github.com/paoloburelli/SounDoJo" title="SounDojo on GitHub" target="_blank"><span>GitHub</span></a></h4>
+			</div>
+		</div>
+		<script type="text/javascript" src="src/analytics.js"></script>
+</html>
