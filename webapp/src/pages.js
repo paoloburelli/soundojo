@@ -59,7 +59,7 @@ function showDefaultPage() {
 		        	var id = element.id;
 		        	$('#gigs ul').append("<li id='"+id+"' class='event'><img src='"+element.image[2]["#text"]+"'/><h3>"+element.title+"</h3><p>"+element.venue.name+"<br/>"+element.startDate+"</p></li>").listview('refresh');       		
 	        	})
-	        })
+	        },function(){});
 	        
 	        findTopArtists(10,function(albums){
 		        albums.forEach(function(element){
@@ -76,7 +76,7 @@ function showDefaultPage() {
 		        	$('#topTracks ul').append("<li id='"+id+"' class='trackLink'><a>"+element.artist.name+" - "+element.name+"</a></li>").listview('refresh');
 		        	$('#topTracks #'+id).click(function(){showTrackPage(element.artist.name,element.name);});
 		        });
-	        },showLoadingError);       
+	        },function(){});       
 	        
 	        stopWaiting();
     });
@@ -136,7 +136,7 @@ function showArtistPage(artistName) {
 		        	$('#top10').append("<li id='"+id+"' class='trackLink'><a>"+element.name+"</a></li>").listview('refresh');
 		        	$('#top10 #'+id).click(function(){showTrackPage(queryResult.name,element.name);});
 		        });
-	        },showLoadingError);
+	        },function(){});
 	        
 	        if (tracks.length == 0)
 				setTimeout(function() {listen('artist',queryResult)},1000);
@@ -176,7 +176,7 @@ function showTagPage(tagName) {
 		        	$('#top10').append("<li id='"+id+"' class='trackLink'><a>"+element.artist.name+" - "+element.name+"</a></li>").listview('refresh');
 		        	$('#top10 #'+id).click(function(){showTrackPage(element.artist.name,element.name);});
 		        });
-	        },showLoadingError);
+	        },function(){});
 	        
 	        if (tracks.length == 0)
 				setTimeout(function() {listen('tag',queryResult)},1000);

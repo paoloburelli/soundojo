@@ -23,6 +23,10 @@ div {
 	margin: 0px;
 }
 
+#errorPopup {
+	text-align: center;
+}
+
 #appLogo {
 	margin: 0px;
 	margin: 6px 0px 6px 0px;

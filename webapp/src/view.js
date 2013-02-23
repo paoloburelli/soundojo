@@ -145,7 +145,7 @@ function showLoadingError(erroMessage) {
 		$( "#errorPopup p" ).text("Error!");
 		
 	$( "#errorPopup" ).popup( "open");
-	setTimeout(function() {$( "#errorPopup" ).popup( "close");},2000);
+	setTimeout(function() {$( "#errorPopup" ).popup( "close");},4000);
 }
 
 function toggleFullScreen() {

@@ -15,9 +15,9 @@ function toggleFollowCurrentTrack(track){
 	followCurrentTrack = !followCurrentTrack;
 	
 	if (followCurrentTrack)
-		$('#trackInfoButton').addClass('ui-btn-active').button('refresh');
+		$('#trackInfoButton').addClass('ui-btn-active');
 	else
-		$('#trackInfoButton').removeClass('ui-btn-active').button('refresh');
+		$('#trackInfoButton').removeClass('ui-btn-active');
 }
 
 function updatePlayer(index) {
@@ -33,9 +33,8 @@ function updatePlayer(index) {
 	});
 	
 	$('#trackInfoButton').click(function(){
+		showArtistPage(tracks[currentTrackIndex].artist);	
 		toggleFollowCurrentTrack(); 
-		if (followCurrentTrack) 
-			showArtistPage(tracks[currentTrackIndex].artist);
 	});
 	
 	if (followCurrentTrack) 
@@ -70,7 +69,8 @@ function playerStateChange(event) {
 			next();
 			break;
 		case -1:
-			notPlayingTimeout = setTimeout(next,5000);
+			clearTimeout(notPlayingTimeout);
+			notPlayingTimeout = setTimeout(next,15000);
 			break;
 		case 1:
 			clearTimeout(notPlayingTimeout);
@@ -121,7 +121,7 @@ function getSimilar(track) {
 		});
 		tracks.unshift(track)
 		refillTrackList(restartPlayer);
-	}, showLoadingError);
+	}, function(){showLoadingError("No similar tracks found")});
 }
 
 function listen(type, value) {
@@ -137,7 +137,7 @@ function listen(type, value) {
 					return 1;
 			});
 			refillTrackList(true);
-		}, showLoadingError);
+		}, function(){showLoadingError("No tracks found for this artist")});
 	} else if (type == 'album') {
 		getAlbumInfo(value, function(albumInfo) {
 			tracks = albumInfo.tracks.track;
@@ -145,7 +145,7 @@ function listen(type, value) {
 				element.image = albumInfo.image;
 			});
 			refillTrackList(true);
-		}, showLoadingError);
+		}, function(){showLoadingError("No tracks found for this album")});
 	} else if (type == 'trackRadio') {
 		getSimilar(value);
 	} else if (type == 'track') {
@@ -161,7 +161,7 @@ function listen(type, value) {
 					return 1;
 			});
 			refillTrackList(true);
-		}, showLoadingError);
+		}, function(){showLoadingError("No tracks found for this tag")});
 	}
 }
 
@@ -178,7 +178,7 @@ function queue(type, value) {
 			});
 			tracks = tracks.concat(toptracks);
 			refillTrackList(false);
-		}, showLoadingError);
+		}, function(){showLoadingError("No tracks found for this artist")});
 	} else if (type === 'album') {
 		getAlbumInfo(value, function(albumInfo) {
 			albumInfo.tracks.track.forEach(function(element) {
@@ -186,7 +186,7 @@ function queue(type, value) {
 			});
 			tracks = tracks.concat(albumInfo.tracks.track);
 			refillTrackList(false);
-		}, showLoadingError);
+		}, function(){showLoadingError("No tracks found for this album")});
 	} else if (type === 'track') {
 		tracks[tracks.length] = value;
 		refillTrackList(tracks.length == 1);
@@ -256,7 +256,6 @@ function onYouTubePlayerAPIReady() {
 
 function onPlayerReady() {
 	player.mute();
-	showDefaultPage();
 }
 
 function lastFmLogin() {
@@ -267,3 +266,7 @@ function lastFmLogin() {
 	//$.cookie("dojoMobile_lastfm_sessionkey","");
 	//$.cookie("dojoMobile_lastfm_apisignature","");
 }
+
+$(function() {
+setTimeout(showDefaultPage,100);
+});
