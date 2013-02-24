@@ -21,6 +21,8 @@ var lastFmNearEventsGetURL = lastFmURL+"method=geo.getevents";
 var lastFmTopArtistsGetURL = lastFmURL+"method=chart.gettopartists";
 var lastFmTopTracksGetURL = lastFmURL+"method=chart.gettoptracks";
 
+var lastFmGetAuthTokenURL = lastFmURL+"method=auth.gettoken";
+
 function parseJson(string){
 	if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1)
 	{
@@ -227,9 +229,12 @@ function findTopTracks(limit,success,fail){
 	});
 }
 
-function lasftfmAuth(username,password,success,fail){
-	var apiSig = $.md5("api_key"+lastFmApiKey+"methodauth.getMobileSessionpassword"+password+"username"+username+"c796f3bf23124fd39a93174ff8a6ac13")
-	$.post("http://www.last.fm/api/auth/",{ "username": username, "password": password, "api_key":lastFmApiKey, "api_sig":apiSig },function(response){
-		console.log(response);
-	});
+function lastfmAuth(success,fail){
+	$.get(lastFmGetAuthTokenURL, function(response){
+		response = parseJson(response);
+		if (response.token !== undefined)
+			success(response.token);
+		else
+			fail();
+	});	
 }

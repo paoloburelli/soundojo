@@ -41,6 +41,11 @@
 				<img src="img/warning.png"/><p></p>
 			</div>
 
+			<div data-role="popup" id="lastfmAuthPage" data-overlay-theme="a" data-theme="c" data-tolerance="15,15" class="ui-content">
+				<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+				<iframe src="" width="800" height="600" seamless></iframe>
+			</div>
+
 			<div data-role="panel" id="searchpanel" data-theme="a">
 				<input type="search" name="search-mini" id="searchtext" value="" data-mini="true" data-theme="c"
 				onchange="delayedSearch(this)"
@@ -64,7 +69,9 @@
 					</p>
 					<input type="password" id="lastfmPassword" value="" data-mini="true" data-theme="c"/>
 					<br/>
-					<button value="login" id="lastfmLoginButton" data-mini="true">Login</button>
+					<button value="login" id="lastfmLoginButton" data-mini="true">
+						Login
+					</button>
 				</form>
 			</div>
 

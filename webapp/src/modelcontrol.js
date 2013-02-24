@@ -259,12 +259,10 @@ function onPlayerReady() {
 }
 
 function lastFmLogin() {
-	console.log($('#lastfmUser')[0].value,$('#lastfmPassword')[0].value);
-	
-	lasftfmAuth($('#lastfmUser')[0].value,$('#lastfmPassword')[0].value);
-	
-	//$.cookie("dojoMobile_lastfm_sessionkey","");
-	//$.cookie("dojoMobile_lastfm_apisignature","");
+	lastfmAuth(function(token){
+		$('#lastfmAuthPage iframe').attr("src","http://www.last.fm/api/auth/?api_key="+lastFmApiKey+"&token="+token);
+		$('#lastfmAuthPage').popup( "open");
+	});
 }
 
 $(function() {

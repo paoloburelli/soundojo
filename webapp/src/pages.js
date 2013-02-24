@@ -57,8 +57,9 @@ function showDefaultPage() {
 	        	$('#gigs h3').text($('#gigs h3').text()+" "+location.split(',')[0])
 	        	events.map(function(element){
 		        	var id = element.id;
-		        	$('#gigs ul').append("<li id='"+id+"' class='event'><img src='"+element.image[2]["#text"]+"'/><h3>"+element.title+"</h3><p>"+element.venue.name+"<br/>"+element.startDate+"</p></li>").listview('refresh');       		
+		        	$('#gigs ul').append("<li id='"+id+"' class='event'><img src='"+element.image[2]["#text"]+"'/><h3>"+element.title+"</h3><p>"+element.venue.name+"<br/>"+element.startDate+"</p></li>");       		
 	        	})
+	        	$('#gigs ul').listview('refresh')
 	        },function(){});
 	        
 	        findTopArtists(10,function(albums){
@@ -73,8 +74,9 @@ function showDefaultPage() {
 	        findTopTracks(10,function(tracks){
 		        tracks.forEach(function(element){
 		        	var id = element.name.replace(/[_\W]+/g, "-");
-		        	$('#topTracks ul').append("<li id='"+id+"' class='trackLink'><a>"+element.artist.name+" - "+element.name+"</a></li>").listview('refresh');
+		        	$('#topTracks ul').append("<li id='"+id+"' class='trackLink'><a>"+element.artist.name+" - "+element.name+"</a></li>");
 		        	$('#topTracks #'+id).click(function(){showTrackPage(element.artist.name,element.name);});
+		        	$('#topTracks ul').listview('refresh')
 		        });
 	        },function(){});       
 	        
@@ -133,9 +135,10 @@ function showArtistPage(artistName) {
 	        findArtistTopTracks(queryResult,10,function(tracks){
 		        tracks.forEach(function(element){
 		        	var id = element.name.replace(/[_\W]+/g, "-");
-		        	$('#top10').append("<li id='"+id+"' class='trackLink'><a>"+element.name+"</a></li>").listview('refresh');
+		        	$('#top10').append("<li id='"+id+"' class='trackLink'><a>"+element.name+"</a></li>");
 		        	$('#top10 #'+id).click(function(){showTrackPage(queryResult.name,element.name);});
 		        });
+		        $('#top10').listview('refresh');
 	        },function(){});
 	        
 	        if (tracks.length == 0)
@@ -173,9 +176,10 @@ function showTagPage(tagName) {
 	        findGenreTopTracks(queryResult,10,function(tracks){
 		        tracks.forEach(function(element){
 		        	var id = element.name.replace(/[_\W]+/g, "-");
-		        	$('#top10').append("<li id='"+id+"' class='trackLink'><a>"+element.artist.name+" - "+element.name+"</a></li>").listview('refresh');
+		        	$('#top10').append("<li id='"+id+"' class='trackLink'><a>"+element.artist.name+" - "+element.name+"</a></li>");
 		        	$('#top10 #'+id).click(function(){showTrackPage(element.artist.name,element.name);});
 		        });
+		        $('#top10').listview('refresh');
 	        },function(){});
 	        
 	        if (tracks.length == 0)

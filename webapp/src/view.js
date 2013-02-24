@@ -55,7 +55,7 @@ function refillTrackList(restartPlayer) {
 			<p>' + element.artist + '</p>\
 		</a>\
 		<a data-icon="minus" class="deleteTrackButton" onclick="removeTrack(' + index + ')"></a>\
-		</li>').listview('refresh');
+		</li>');
 
 		index++;
 	});
@@ -82,7 +82,7 @@ function addResultItem(name,author, image, className, index) {
 		} else
 			imgName = 'img/unknown_album.png';
 
-		$('#results').append('<li id="res_' + className + index + '"><a><img src="' + imgName + '"/><h3>' + name + '</h3><p>'+author+'</p></a></li>').listview('refresh');
+		$('#results').append('<li id="res_' + className + index + '"><a><img src="' + imgName + '"/><h3>' + name + '</h3><p>'+author+'</p></a></li>');
 	
 		if (className == "artist")
 			$('#res_' + className + index).click(function(){showArtistPage(name); $( "#searchpanel" ).panel( "close" );});
@@ -94,14 +94,14 @@ function addResultItem(name,author, image, className, index) {
 			$('#res_' + className + index).click(function(){showTrackPage(author,name); $( "#searchpanel" ).panel( "close" );});
 	
 	} else {
-		$('#results').append('<li id="res_' + className + index + '"><a><h3>' + name + '</h3></a></li>').listview('refresh');
+		$('#results').append('<li id="res_' + className + index + '"><a><h3>' + name + '</h3></a></li>');
 		$('#res_' + className + index).click(function(){showTagPage(name); $( "#searchpanel" ).panel( "close" );});
 	}
 
 }
 
 function addResultTitle(name) {
-	$('#results').append('<li data-role="list-divider" role="heading"><a><h3>' + name + '</h3></a></li>').listview('refresh');
+	$('#results').append('<li data-role="list-divider" role="heading"><a><h3>' + name + '</h3></a></li>');
 }
 
 
@@ -112,24 +112,28 @@ function showResults() {
 		addResultTitle("Artists");
 		for (var i = 0; i < searchResults.artists.length; i++)
 			addResultItem(searchResults.artists[i].name,"", searchResults.artists[i].image, 'artist', i)
+		$('#results').listview('refresh');
 	}
 
 	if (searchResults.albums.forEach !== undefined) {
 		addResultTitle("Albums");
 		for (var i = 0; i < searchResults.albums.length; i++)
 			addResultItem(searchResults.albums[i].name,searchResults.albums[i].artist, searchResults.albums[i].image, 'album', i)
+		$('#results').listview('refresh');
 	}
 
 	if (searchResults.tracks.forEach !== undefined) {
 		addResultTitle("Tracks");
 		for (var i = 0; i < searchResults.tracks.length; i++)
 			addResultItem(searchResults.tracks[i].name,searchResults.tracks[i].artist, searchResults.tracks[i].image, 'track', i)
+		$('#results').listview('refresh');
 	}
 
 	if (searchResults.tags.forEach !== undefined) {
 		addResultTitle("Tags");
 		for (var i = 0; i < searchResults.tags.length; i++)
 			addResultItem(searchResults.tags[i].name,undefined,undefined, 'tag', i)
+		$('#results').listview('refresh');
 	}
 
 	if ($('#results').children().length == 0) {
