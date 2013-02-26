@@ -62,14 +62,6 @@ function onYouTubePlayerAPIReady() {
 			setTimeout(showHomePage, 100);
 	}
 
-	$('#trackInfoButton').click(function() {
-		showArtistPage(sounDojo.trackList[sounDojo.currentTrackIndex].artist);
-		toggleFollowCurrentTrack();
-	});
-	
 	sounDojo.init();
-	
-	setTimeout(showHomePage,100);
-	setTimeout(showLastfmLoginState,1000);
-	$('#lastfmAuthPopup').on({popupbeforeposition:lastFmLoginSecondStep,popupafterclose:lastFmLoginThirdStep});
+	initUI();
 }

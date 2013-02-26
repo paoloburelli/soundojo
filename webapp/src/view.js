@@ -170,9 +170,26 @@ function hideSearchThrobber() {
 }
 
 function showLastfmLoginState() {
-	if (sounDojo.lastFmSession())
-		$('#lastfmLoginButton').val('on');
-	else
-		$('#lastfmLoginButton').val('off');
-	$('#lastfmLoginButton').slider("refresh");
+	if (sounDojo.lastFmSession()){
+		$('#lastfmLoginButton').val('on').slider("refresh");
+		$('#scrobbleToggle').slider('enable');
+	}else {
+		$('#lastfmLoginButton').val('off').slider("refresh");
+		$('#scrobbleToggle').val('off').slider("refresh");
+		$('#scrobbleToggle').slider('disable');
+	}
+}
+
+function initUI(){
+	$('#trackInfoButton').click(function() {
+		showArtistPage(sounDojo.trackList[sounDojo.currentTrackIndex].artist);
+		toggleFollowCurrentTrack();
+	});
+	
+	if(sounDojo.lastFmSettings.scrobbling)
+		$('#scrobbleToggle').val('on').slider("refresh");
+	
+	setTimeout(showHomePage,100);
+	setTimeout(showLastfmLoginState,1000);
+	$('#lastfmAuthPopup').on({popupbeforeposition:lastFmLoginSecondStep,popupafterclose:lastFmLoginThirdStep});
 }

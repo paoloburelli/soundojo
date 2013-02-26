@@ -49,9 +49,11 @@ function SounDojo() {
 		else {
 			this.lastFmSettings.sessionKey = sessionKey;
 			
-			if (sessionKey === null)
+			if (sessionKey === null){
+				this.lastFmSettings.scrobbling = false;
+				this.lastFmSettings.username="";
 				this.onLastFmLogout();
-			else
+			}else
 				this.onLastFmLogin();
 		}
 		this.save();
