@@ -1,7 +1,7 @@
 function updateTrackList() {
 	$('#playlist').children().removeClass('ui-btn-active');
-	$('#track' + currentTrackIndex).addClass('ui-btn-active');
-	$('#track'+currentTrackIndex)[0].scrollIntoView(true);
+	$('#track' + sounDojo.currentTrackIndex).addClass('ui-btn-active');
+	$('#track'+sounDojo.currentTrackIndex)[0].scrollIntoView(true);
 }
 
 var waiting = false;
@@ -20,22 +20,17 @@ function stopWaiting() {
 }
 
 function removeTrack(index) {
-	if (index == currentTrackIndex)
+	if (index == sounDojo.currentTrackIndex)
 		next();
 	$('#track' + index).remove();
-	delete (tracks[index]);
-	
-	if(tracks.length == 1)
-		tracks = [];
+	sounDojo.removeTrack(index);
 }
 
-function refillTrackList(restartPlayer) {
-	currentTrackIndex = 0;
+function refillTrackList() {
 	var index = 0;
-
 	$('#playlist').empty();
 
-	tracks.forEach(function(element) {
+	sounDojo.trackList.forEach(function(element) {
 
 		if (element.artist.name !== undefined)
 			element.artist = element.artist.name;
@@ -50,7 +45,7 @@ function refillTrackList(restartPlayer) {
 		}
 
 		$('#playlist').append('<li id="track' + index + '">\
-		<a onclick="updatePlayer(' + index + ')"><img src="' + imageName + '"/>\
+		<a onclick="sounDojo.updatePlayer(' + index + ')"><img src="' + imageName + '"/>\
 			<h3>' + element.name + '</h3>\
 			<p>' + element.artist + '</p>\
 		</a>\
@@ -62,11 +57,7 @@ function refillTrackList(restartPlayer) {
 
 	$('#playlist').listview('refresh');
 
-	if (restartPlayer || player === undefined)
-		initPlayer();
-
 	updateTrackList();
-	stopWaiting();
 }
 
 function addResultItem(name,author, image, className, index) {
@@ -108,31 +99,31 @@ function addResultTitle(name) {
 function showResults() {
 	$('#results').empty();
 
-	if (searchResults.artists.forEach !== undefined) {
+	if (sounDojo.searchResults.artists.forEach !== undefined) {
 		addResultTitle("Artists");
-		for (var i = 0; i < searchResults.artists.length; i++)
-			addResultItem(searchResults.artists[i].name,"", searchResults.artists[i].image, 'artist', i)
+		for (var i = 0; i < sounDojo.searchResults.artists.length; i++)
+			addResultItem(sounDojo.searchResults.artists[i].name,"", sounDojo.searchResults.artists[i].image, 'artist', i)
 		$('#results').listview('refresh');
 	}
 
-	if (searchResults.albums.forEach !== undefined) {
+	if (sounDojo.searchResults.albums.forEach !== undefined) {
 		addResultTitle("Albums");
-		for (var i = 0; i < searchResults.albums.length; i++)
-			addResultItem(searchResults.albums[i].name,searchResults.albums[i].artist, searchResults.albums[i].image, 'album', i)
+		for (var i = 0; i < sounDojo.searchResults.albums.length; i++)
+			addResultItem(sounDojo.searchResults.albums[i].name,sounDojo.searchResults.albums[i].artist, sounDojo.searchResults.albums[i].image, 'album', i)
 		$('#results').listview('refresh');
 	}
 
-	if (searchResults.tracks.forEach !== undefined) {
+	if (sounDojo.searchResults.tracks.forEach !== undefined) {
 		addResultTitle("Tracks");
-		for (var i = 0; i < searchResults.tracks.length; i++)
-			addResultItem(searchResults.tracks[i].name,searchResults.tracks[i].artist, searchResults.tracks[i].image, 'track', i)
+		for (var i = 0; i < sounDojo.searchResults.tracks.length; i++)
+			addResultItem(sounDojo.searchResults.tracks[i].name,sounDojo.searchResults.tracks[i].artist, sounDojo.searchResults.tracks[i].image, 'track', i)
 		$('#results').listview('refresh');
 	}
 
-	if (searchResults.tags.forEach !== undefined) {
+	if (sounDojo.searchResults.tags.forEach !== undefined) {
 		addResultTitle("Tags");
-		for (var i = 0; i < searchResults.tags.length; i++)
-			addResultItem(searchResults.tags[i].name,undefined,undefined, 'tag', i)
+		for (var i = 0; i < sounDojo.searchResults.tags.length; i++)
+			addResultItem(sounDojo.searchResults.tags[i].name,undefined,undefined, 'tag', i)
 		$('#results').listview('refresh');
 	}
 
@@ -176,4 +167,12 @@ function showSearchThrobber() {
 
 function hideSearchThrobber() {
 	$('#searchingThrobber').css('display','none');
+}
+
+function showLastfmLoginState() {
+	if (sounDojo.lastFmSession())
+		$('#lastfmLoginButton').val('on');
+	else
+		$('#lastfmLoginButton').val('off');
+	$('#lastfmLoginButton').slider("refresh");
 }

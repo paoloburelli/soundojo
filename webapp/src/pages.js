@@ -1,3 +1,13 @@
+var followCurrentTrack=false;
+function toggleFollowCurrentTrack(track) {
+	followCurrentTrack = !followCurrentTrack;
+
+	if (followCurrentTrack)
+		$('#trackInfoButton').addClass('ui-btn-active');
+	else
+		$('#trackInfoButton').removeClass('ui-btn-active');
+}
+
 function loadPage(pageUrl,pageLoaded){
 	$.get(pageUrl, function(data) {
 	        $('#infopage').html(data);
@@ -48,10 +58,55 @@ function fillWithContent(artist,content,tag){
 	        });
 }
 
+function showHomePage() {
+	if (sounDojo.lastFmSession())
+		showPersonalPage();
+	else
+		showDefaultPage();
+}
+
 function showDefaultPage() {
 	startWaiting();
 	
 	loadPage('default.html', function() {
+	        
+	        findNearEvents(10,function(events,location){
+	        	$('#gigs h3').text($('#gigs h3').text()+" "+location.split(',')[0])
+	        	events.map(function(element){
+		        	var id = element.id;
+		        	$('#gigs ul').append("<li id='"+id+"' class='event'><img src='"+element.image[2]["#text"]+"'/><h3>"+element.title+"</h3><p>"+element.venue.name+"<br/>"+element.startDate+"</p></li>");       		
+	        	})
+	        	$('#gigs ul').listview('refresh')
+	        },function(){});
+	        
+	        findTopArtists(10,function(albums){
+		        albums.forEach(function(element){
+		        	var id = element.name.replace(/[_\W]+/g, "-");
+		        	$('#topArtists').append("<div id='"+id+"' class='albumLink clickable'><img src='"+element.image[2]['#text']+"'/><p>"+element.name+"</p></div>");
+		        	$('#topArtists #'+id).click(function(){showArtistPage(element.name);});
+		        });
+		        refreshPage();	        	
+	        },function(){});
+	        
+	        findTopTracks(10,function(tracks){
+		        tracks.forEach(function(element){
+		        	var id = element.name.replace(/[_\W]+/g, "-");
+		        	$('#topTracks ul').append("<li id='"+id+"' class='trackLink'><a>"+element.artist.name+" - "+element.name+"</a></li>");
+		        	$('#topTracks #'+id).click(function(){showTrackPage(element.artist.name,element.name);});
+		        	$('#topTracks ul').listview('refresh')
+		        });
+	        },function(){});       
+	        
+	        stopWaiting();
+    });
+}
+
+function showPersonalPage() {
+	startWaiting();
+	
+	loadPage('personal.html', function() {
+	        
+	        $('h2').text(sounDojo.lastFmSettings.username);
 	        
 	        findNearEvents(10,function(events,location){
 	        	$('#gigs h3').text($('#gigs h3').text()+" "+location.split(',')[0])
@@ -101,7 +156,7 @@ function showArtistPage(artistName) {
 	        	fillWithContent(artistName,queryResult.bio.content,'#bio');
 	        
 	        $('#playTopTracks').text($('#playTopTracks').text()+" "+queryResult.name);
-	        $('#playTopTracks').click(function(){listen("artist",queryResult);});
+	        $('#playTopTracks').click(function(){sounDojo.listen("artist",queryResult);});
 	        
 	       	if (queryResult.tags.tag !== undefined) {
 	       		if (queryResult.tags.tag.forEach !== undefined)
@@ -141,8 +196,8 @@ function showArtistPage(artistName) {
 		        $('#top10').listview('refresh');
 	        },function(){});
 	        
-	        if (tracks.length == 0)
-				setTimeout(function() {listen('artist',queryResult)},1000);
+	        if (sounDojo.isTrackListEmpty())
+				setTimeout(function() {sounDojo.listen('artist',queryResult)},1000);
 	        
 	        stopWaiting();
     	});
@@ -161,7 +216,7 @@ function showTagPage(tagName) {
 	        	fillWithContent("",queryResult.wiki.content,'#wiki');
 	        
 	        $('#playTopTracks').text($('#playTopTracks').text()+" "+queryResult.name);
-	        $('#playTopTracks').click(function(){listen("tag",queryResult);});
+	        $('#playTopTracks').click(function(){sounDojo.listen("tag",queryResult);});
 	        
 	        
 	        findGenreTopArtists(queryResult,9,function(albums){
@@ -182,8 +237,8 @@ function showTagPage(tagName) {
 		        $('#top10').listview('refresh');
 	        },function(){});
 	        
-	        if (tracks.length == 0)
-				setTimeout(function() {listen('tag',queryResult)},1000);
+	        if (sounDojo.isTrackListEmpty())
+				setTimeout(function() {sounDojo.listen('tag',queryResult)},1000);
 	        
 	        stopWaiting();
     	});
@@ -209,17 +264,10 @@ function showAlbumPage(album) {
 	        	fillWithContent(queryResult.artist,queryResult.wiki.content,'#wiki');
 	        
 	        $('#playAlbum').text($('#playAlbum').text()+" "+queryResult.name);
-	        $('#playAlbum').click(function(){listen("album",queryResult);});
+	        $('#playAlbum').click(function(){sounDojo.listen("album",queryResult);});
 	        
 	        $('#enqueueAlbum').text($('#enqueueAlbum').text()+" "+queryResult.name);
-	        $('#enqueueAlbum').click(function(){queue("album",queryResult);});
-	       
-	       /*if (queryResult.toptags.tag !== undefined) {
-	       		if (queryResult.toptags.tag.forEach !== undefined)
-	       			queryResult.toptags.tag.forEach(function(element){$('#albumTags').append("<a data-role='button' data-mini='true' data-inline='true'>"+element.name+"</a>");});
-				else	
-					$('#albumTags').append("<a data-role='button' data-mini='true' data-inline='true'>"+queryResult.toptags.tag.name+"</a>");
-			}*/
+	        $('#enqueueAlbum').click(function(){sounDojo.queue("album",queryResult);});
 			
 	       	if (queryResult.toptags.tag !== undefined) {
 	       		if (queryResult.toptags.tag.forEach !== undefined)
@@ -242,8 +290,8 @@ function showAlbumPage(album) {
 			        	$('#'+id).click(function(){showTrackPage(queryResult.artist,element.name);});
 			   });
 		   
-		   if (tracks.length == 0)
-				listen('album',queryResult)
+		   if (sounDojo.isTrackListEmpty())
+				sounDojo.listen('album',queryResult)
 		   
 	       stopWaiting();
     	});
@@ -278,13 +326,13 @@ function showTrackPage(artistName,trackName) {
 	        	fillWithContent(queryResult.artist,queryResult.wiki.content,'#wiki');
 	        
 	        //$('#tuneTrack').text($('#tuneTrack').text()+" "+queryResult.name);
-	        $('#tuneTrack').click(function(){listen("trackRadio",queryResult);});
+	        $('#tuneTrack').click(function(){sounDojo.listen("trackRadio",queryResult);});
 	        
 	        $('#enqueueTrack').text($('#enqueueTrack').text()+" "+queryResult.name);
-	        $('#enqueueTrack').click(function(){queue("track",queryResult);});
+	        $('#enqueueTrack').click(function(){sounDojo.queue("track",queryResult);});
 	        
 	        $('#playTrack').text($('#playTrack').text()+" "+queryResult.name);
-	        $('#playTrack').click(function(){listen("track",queryResult);});	        
+	        $('#playTrack').click(function(){sounDojo.listen("track",queryResult);});	        
 	        
 	       	if (queryResult.toptags.tag !== undefined) {
 	       		if (queryResult.toptags.tag.forEach !== undefined)
@@ -300,8 +348,8 @@ function showTrackPage(artistName,trackName) {
 				}
 			}
 			
-		   	if (tracks.length == 0)
-				listen('track',queryResult)
+		   	if (sounDojo.isTrackListEmpty())
+				sounDojo.listen('track',queryResult)
 				
 	       stopWaiting();
     	});
