@@ -2,9 +2,9 @@ var lastfm;
 
 var lastFMapiKey = '637cd83942ac41be7df3e84db83b3681';
 var lastFMsecret = 'c796f3bf23124fd39a93174ff8a6ac13';
-
-var youtubeDataQueryURL = "https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&category=Music&q=";
 var lastFmApiBaseURL = "https://ws.audioscrobbler.com/2.0/"
+var youtubeDataQueryURL = "https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&category=Music&q=";
+
 var lastFmURL = lastFmApiBaseURL + "?api_key=" + lastFMapiKey + "&format=json&autocorrect=1&"
 var searchLimit = 5;
 var lastFmArtistSearchURL = lastFmURL + "limit=" + searchLimit + "&method=artist.search&artist="
@@ -30,10 +30,9 @@ var lastFmTrackGetURL = function(artistName, trackName) {
 	return lastFmURL + "method=track.getInfo&artist=" + artistName + "&track=" + trackName
 }
 var lastFmTagGetURL = lastFmURL + "method=tag.getInfo";
-var lastFmNearEventsGetURL = lastFmURL + "method=geo.getevents";
+var lastFmUserGetURL = lastFmURL + "method=user.getinfo";
 
-var lastFmTopArtistsGetURL = lastFmURL + "method=chart.gettopartists";
-var lastFmTopTracksGetURL = lastFmURL + "method=chart.gettoptracks";
+var lastFmUserGetTopTagsURL = lastFmURL + "method=user.gettoptags";
 
 var lastFmGetAuthTokenURL = lastFmURL + "method=auth.getToken";
 var lastFmGetAuthSessionURL = lastFmURL + "method=auth.getSession";
@@ -43,6 +42,28 @@ function parseJson(string) {
 		return $.parseJSON(string);
 	} else
 		return string;
+}
+
+function getApiSignature(params) {
+	var keys = [];
+	var string = '';
+
+	for (var key in params) {
+		keys.push(key);
+	}
+
+	keys.sort();
+
+	for (var index in keys) {
+		var key = keys[index];
+
+		string += key + params[key];
+	}
+
+	string += lastFMsecret;
+
+	/* Needs lastfm.api.md5.js. */
+	return md5(string);
 }
 
 function findVideos(query, success, fail) {
@@ -168,6 +189,28 @@ function getTagInfo(tag, success, fail) {
 	});
 }
 
+function getUserInfo(user, success, fail) {
+	var url = lastFmUserGetURL + '&user=' + user;
+	$.get(url, function(response) {
+		response = parseJson(response);
+		if (response.user !== undefined)
+			success(response.user);
+		else
+			fail();
+	});
+}
+
+function getUserTopTags(user, success, fail) {
+	var url = lastFmUserGetTopTagsURL + '&user=' + user;
+	$.get(url, function(response) {
+		response = parseJson(response);
+		if (response.toptags.tag !== undefined)
+			success(response.toptags.tag);
+		else
+			fail();
+	});
+}
+
 function getArtistDiscrography(artist, success, fail) {
 	var url = lastFmArtistAlbumSearchURL(10) + artist.name;
 	$.get(url, function(response) {
@@ -224,19 +267,45 @@ function findGenreTopArtists(genre, limit, success, fail) {
 }
 
 function findNearEvents(limit, success, fail) {
-	$.get(lastFmNearEventsGetURL + '&limit=' + limit, function(response) {
+	params = {};
+	params.api_key = lastFMapiKey;
+	params.limit = limit;
+	
+	if (sounDojo.lastFmSession()) {
+		params.method = "user.getRecommendedEvents";
+		params.sk = sounDojo.lastFmSettings.sessionKey;
+		params.api_sig = getApiSignature(params);
+	} else
+		params.method = "geo.getEvents";
+		
+	params.format = "json";
+
+	$.post(lastFmApiBaseURL, params, function(response) {
 		response = parseJson(response);
-		if (response != "" && response.events.event !== undefined)
-			success(response.events.event, response.events['@attr'].location);
+		if (response.events !== undefined)
+			success(response.events);
 		else
 			fail();
 	});
 }
 
 function findTopArtists(limit, success, fail) {
-	$.get(lastFmTopArtistsGetURL + '&limit=' + limit, function(response) {
+	params = {};
+	params.api_key = lastFMapiKey;
+	params.limit = limit;
+	params.format = "json";
+	
+	if (sounDojo.lastFmSession()) {
+		params.method = "user.getTopArtists";
+		params.user = sounDojo.lastFmSettings.username;
+	} else
+		params.method = "chart.getTopArtists";
+		
+	$.post(lastFmApiBaseURL, params, function(response) {
 		response = parseJson(response);
-		if (response != "" && response.artists.artist !== undefined)
+		if (response.topartists !== undefined)
+			success(response.topartists.artist);
+		else if (response.artists !== undefined)
 			success(response.artists.artist);
 		else
 			fail();
@@ -244,9 +313,22 @@ function findTopArtists(limit, success, fail) {
 }
 
 function findTopTracks(limit, success, fail) {
-	$.get(lastFmTopTracksGetURL + '&limit=' + limit, function(response) {
+	params = {};
+	params.api_key = lastFMapiKey;
+	params.limit = limit;
+	params.format = "json";
+	
+	if (sounDojo.lastFmSession()) {
+		params.method = "user.getTopTracks";
+		params.user = sounDojo.lastFmSettings.username;
+	} else
+		params.method = "chart.getTopTracks";
+		
+	$.post(lastFmApiBaseURL, params, function(response) {
 		response = parseJson(response);
-		if (response != "" && response.tracks.track !== undefined)
+		if (response.toptracks !== undefined)
+			success(response.toptracks.track);
+		else if (response.tracks !== undefined)
 			success(response.tracks.track);
 		else
 			fail();
@@ -287,7 +369,7 @@ function lastFmLoginThirdStep() {
 		token : lastFMstep1token
 	}, {
 		success : function(data) {
-			sounDojo.lastFmSession(data.session.key,data.session.name);
+			sounDojo.lastFmSession(data.session.key, data.session.name);
 		},
 		error : function(code, message) {
 			sounDojo.lastFmSession(null);
@@ -295,6 +377,7 @@ function lastFmLoginThirdStep() {
 	});
 	$("#lastfmAuthPage").remove();
 }
+
 
 $(document).ready(function() {
 	lastfm = new LastFM({

@@ -319,6 +319,18 @@ border-bottom-right-radius: .6em;
 	text-align: left;
 }
 
+#userPortrait {
+	height: 40px;
+	max-width:50px;
+	float: left;
+	border: 1px solid black;
+}
+
+#userWelcome {
+	padding: 7px;
+	margin-left: 55px;
+}
+
 #infopage #portrait {
 	width: 100%;
 }
@@ -385,9 +397,10 @@ border-bottom-right-radius: .6em;
 #artist-bottom .ui-block-b {width: 30%}
 
 #top10 {
-	width: 90%;
+	margin-right: 30px;
 	margin-bottom: 10px;
 	margin-top: 20px;
+	margin-left: 15px;
 }
 
 #infopage #albumTracks {

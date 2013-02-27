@@ -70,16 +70,16 @@ function showDefaultPage() {
 	
 	loadPage('default.html', function() {
 	        
-	        findNearEvents(10,function(events,location){
-	        	$('#gigs h3').text($('#gigs h3').text()+" "+location.split(',')[0])
-	        	events.map(function(element){
+	        findNearEvents(10,function(events){
+	        	$('#gigs h3').text($('#gigs h3').text()+" "+events['@attr'].location.split(',')[0])
+	        	events.event.map(function(element){
 		        	var id = element.id;
 		        	$('#gigs ul').append("<li id='"+id+"' class='event'><img src='"+element.image[2]["#text"]+"'/><h3>"+element.title+"</h3><p>"+element.venue.name+"<br/>"+element.startDate+"</p></li>");       		
 	        	})
 	        	$('#gigs ul').listview('refresh')
 	        },function(){});
 	        
-	        findTopArtists(10,function(albums){
+	        findTopArtists(12,function(albums){
 		        albums.forEach(function(element){
 		        	var id = element.name.replace(/[_\W]+/g, "-");
 		        	$('#topArtists').append("<div id='"+id+"' class='albumLink clickable'><img src='"+element.image[2]['#text']+"'/><p>"+element.name+"</p></div>");
@@ -91,9 +91,9 @@ function showDefaultPage() {
 	        findTopTracks(10,function(tracks){
 		        tracks.forEach(function(element){
 		        	var id = element.name.replace(/[_\W]+/g, "-");
-		        	$('#topTracks ul').append("<li id='"+id+"' class='trackLink'><a>"+element.artist.name+" - "+element.name+"</a></li>");
-		        	$('#topTracks #'+id).click(function(){showTrackPage(element.artist.name,element.name);});
-		        	$('#topTracks ul').listview('refresh')
+		        	$('#top10 ol').append("<li id='"+id+"' class='trackLink'><a>"+element.artist.name+" - "+element.name+"</a></li>");
+		        	$('#top10 #'+id).click(function(){showTrackPage(element.artist.name,element.name);});
+		        	$('#top10 ol').listview('refresh')
 		        });
 	        },function(){});       
 	        
@@ -106,18 +106,40 @@ function showPersonalPage() {
 	
 	loadPage('personal.html', function() {
 	        
-	        $('h2').text(sounDojo.lastFmSettings.username);
+	        $('h2').text('Welcome '+sounDojo.lastFmSettings.username);
 	        
-	        findNearEvents(10,function(events,location){
-	        	$('#gigs h3').text($('#gigs h3').text()+" "+location.split(',')[0])
-	        	events.map(function(element){
+	        getUserInfo(sounDojo.lastFmSettings.username,function(user){
+				$('#userPortrait').attr({ 
+		          src: user.image[1]["#text"],
+		          title: user.name,
+		          alt: user.name+" Portrait"
+		        });	        	
+	        },function(){});
+	        
+	        getUserTopTags(sounDojo.lastFmSettings.username,function(tags){
+		       		if (tags.forEach !== undefined)
+		       			tags.forEach(function(element){
+		       				var id = element.name.replace(/[_\W]+/g, "-");
+		       				$('#personalTags').append("<a id='"+id+"' data-role='button' data-mini='true' data-inline='true'>"+element.name+"</a>");
+		       				$('#personalTags #'+id).click(function(){showTagPage(element.name);});
+		       			});
+					else {
+							var id = tags.name.replace(/[_\W]+/g, "-");
+		       				$('#personalTags').append("<a id='"+id+"' data-role='button' data-mini='true' data-inline='true'>"+tags.name+"</a>");
+		       				$('#personalTags #'+id).click(function(){showTagPage(tags.name);});
+					}   	
+	        },function(){});
+	        
+	        findNearEvents(10,function(events){
+	        	//$('#gigs h3').text($('#gigs h3').text()+" "+location.split(',')[0])
+	        	events.event.map(function(element){
 		        	var id = element.id;
 		        	$('#gigs ul').append("<li id='"+id+"' class='event'><img src='"+element.image[2]["#text"]+"'/><h3>"+element.title+"</h3><p>"+element.venue.name+"<br/>"+element.startDate+"</p></li>");       		
 	        	})
 	        	$('#gigs ul').listview('refresh')
 	        },function(){});
 	        
-	        findTopArtists(10,function(albums){
+	        findTopArtists(12,function(albums){
 		        albums.forEach(function(element){
 		        	var id = element.name.replace(/[_\W]+/g, "-");
 		        	$('#topArtists').append("<div id='"+id+"' class='albumLink clickable'><img src='"+element.image[2]['#text']+"'/><p>"+element.name+"</p></div>");
@@ -129,9 +151,9 @@ function showPersonalPage() {
 	        findTopTracks(10,function(tracks){
 		        tracks.forEach(function(element){
 		        	var id = element.name.replace(/[_\W]+/g, "-");
-		        	$('#topTracks ul').append("<li id='"+id+"' class='trackLink'><a>"+element.artist.name+" - "+element.name+"</a></li>");
-		        	$('#topTracks #'+id).click(function(){showTrackPage(element.artist.name,element.name);});
-		        	$('#topTracks ul').listview('refresh')
+		        	$('#top10 ol').append("<li id='"+id+"' class='trackLink'><a>"+element.artist.name+" - "+element.name+"</a></li>");
+		        	$('#top10 #'+id).click(function(){showTrackPage(element.artist.name,element.name);});
+		        	$('#top10 ol').listview('refresh')
 		        });
 	        },function(){});       
 	        
@@ -219,7 +241,7 @@ function showTagPage(tagName) {
 	        $('#playTopTracks').click(function(){sounDojo.listen("tag",queryResult);});
 	        
 	        
-	        findGenreTopArtists(queryResult,9,function(albums){
+	        findGenreTopArtists(queryResult,12,function(albums){
 		        albums.forEach(function(element){
 		        	var id = element.name.replace(/[_\W]+/g, "-");
 		        	$('#topArtists').append("<div id='"+id+"' class='albumLink clickable'><img src='"+element.image[1]['#text']+"'/><p>"+element.name+"</p></div>");
