@@ -1,5 +1,3 @@
-var lastfm;
-
 var lastFMapiKey = '637cd83942ac41be7df3e84db83b3681';
 var lastFMsecret = 'c796f3bf23124fd39a93174ff8a6ac13';
 var lastFmApiBaseURL = "https://ws.audioscrobbler.com/2.0/"
@@ -35,7 +33,6 @@ var lastFmUserGetURL = lastFmURL + "method=user.getinfo";
 var lastFmUserGetTopTagsURL = lastFmURL + "method=user.gettoptags";
 
 var lastFmGetAuthTokenURL = lastFmURL + "method=auth.getToken";
-var lastFmGetAuthSessionURL = lastFmURL + "method=auth.getSession";
 
 function parseJson(string) {
 	if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
@@ -345,6 +342,23 @@ function lastfmAuthGetToken(success, fail) {
 	});
 }
 
+function lastfmAuthGetSession(token,success, fail) {
+	params = {};
+	params.api_key = lastFMapiKey;
+	params.method = "auth.getSession";
+	params.token = token;
+	params.api_sig = getApiSignature(params);
+	params.format = "json";
+
+	$.post(lastFmApiBaseURL, params, function(response) {
+		response = parseJson(response);
+		if (response.session !== undefined)
+			success(response.session);
+		else
+			fail();
+	});
+}
+
 var lastFMstep1token;
 function lastFmLogin() {
 	if (sounDojo.lastFmSession())
@@ -365,23 +379,12 @@ function lastFmLoginSecondStep() {
 }
 
 function lastFmLoginThirdStep() {
-	lastfm.auth.getSession({
-		token : lastFMstep1token
-	}, {
-		success : function(data) {
-			sounDojo.lastFmSession(data.session.key, data.session.name);
-		},
-		error : function(code, message) {
+	lastfmAuthGetSession(lastFMstep1token, 
+	function(session) {
+			sounDojo.lastFmSession(session.key, session.name);
+	},
+	function(code, message) {
 			sounDojo.lastFmSession(null);
-		}
 	});
 	$("#lastfmAuthPage").remove();
 }
-
-
-$(document).ready(function() {
-	lastfm = new LastFM({
-		apiKey : lastFMapiKey,
-		apiSecret : lastFMsecret
-	});
-});
