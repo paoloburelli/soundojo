@@ -58,3 +58,9 @@ var changeListViewElementTheme = function(selector, theme){
         alert(ex);
     }
 }
+
+$.urlParam = function(name){
+	var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	if (!results) { return undefined; }
+	return results[1] || undefined;
+}

@@ -73,6 +73,10 @@ function start() {
 		}
 
 		sounDojo.init();
+		
+		if($.urlParam('token'))
+			lastFmLoginCallback($.urlParam('token'));
+		
 		initUI();
 		started = true;
 	}

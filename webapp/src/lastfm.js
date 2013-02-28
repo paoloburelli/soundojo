@@ -486,39 +486,18 @@ function lastfmAuthGetSession(token, success, fail) {
 	});
 }
 
-var lastFMstep1token;
-var authThread;
-
 function lastFmLogin() {
 	if (sounDojo.lastFmSession())
 		sounDojo.lastFmSession(null);
 	else {
-		lastfmAuthGetToken(function(token) {
-			lastFMstep1token = token;
-			lastFmLoginSecondStep();
-		}, function() {
-			showLastfmLoginState();
-		});
+		window.open('http://www.last.fm/api/auth/?api_key='+lastFMapiKey+'&cb='+window.location.href);
 	}
 }
 
-function lastFmLoginSecondStep() {
-	$("#lastfmAuthPage").remove();
-	$('#lastfmAuthPopup').append('<iframe id="lastfmAuthPage" src="" width="850" height="650" seamless></iframe>');
-	$('#lastfmAuthPage').attr("src", "http://www.last.fm/api/auth/?api_key=" + lastFMapiKey + "&token=" + lastFMstep1token);
-	$('#lastfmAuthPopup').popup("open", {
-		history : false
-	});
-	authThread = setInterval(lastFmLoginThirdStep, 2000);
-}
-
-function lastFmLoginThirdStep() {
-	lastfmAuthGetSession(lastFMstep1token, function(session) {
-		clearInterval(authThread);
-		$('#lastfmAuthPopup').popup("close");
-		$('#lastfmAuthPopup').popup("close");
+function lastFmLoginCallback(token) {
+	lastfmAuthGetSession(token, function(session) {
 		sounDojo.lastFmSession(session.key, session.name);
-	}, function(code, message) {
-		showLastfmLoginState();
+	}, function() {
+		sounDojo.lastFmSession(null);
 	});
 }
