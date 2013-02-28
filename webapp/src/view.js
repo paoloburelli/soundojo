@@ -1,7 +1,9 @@
 function updateTrackList() {
-	$('#playlist').children().removeClass('ui-btn-active');
-	$('#track' + sounDojo.currentTrackIndex).addClass('ui-btn-active');
-	$('#track'+sounDojo.currentTrackIndex)[0].scrollIntoView(true);
+	if (sounDojo.trackList.length > 0){
+		$('#playlist').children().removeClass('ui-btn-active');
+		$('#track' + sounDojo.currentTrackIndex).addClass('ui-btn-active');
+		$('#track'+sounDojo.currentTrackIndex)[0].scrollIntoView(true);
+	}
 }
 
 var waiting = false;
@@ -144,17 +146,19 @@ function showLoadingError(erroMessage) {
 }
 
 function toggleFullScreen() {
-	if ($('#playerpage').length != 0){
+	if ($('#playerpage-fullscreen').length == 0){
 		$('#playerpage').attr('id','playerpage-fullscreen');
-		$('#player').css("width",$('#main').outerWidth()-$('#playlist').outerWidth());
-		$('#player').css("height",$('#main').outerHeight()-$('#header').outerHeight()-$('#controls').outerHeight()+2);
+		$('#player').css("width",$('#infopage').outerWidth());
+		$('#player').css("height",$('#infopage').outerHeight());
+		$('#playlist li').each(function(){$(this).buttonMarkup({theme: 'a'})});
 		window.onresize = function() {
   			if($('#playerpage-fullscreen').length != 0){
-				$('#player').css("width",$('#main').outerWidth()-$('#playlist').outerWidth());
-				$('#player').css("height",$('#main').outerHeight()-$('#header').outerHeight()-$('#controls').outerHeight()+2); 				
+				$('#player').css("width",$('#infopage').outerWidth());
+				$('#player').css("height",$('#infopage').outerHeight());			
   			}
 		};
 	} else {
+		$('#playlist li').each(function(){$(this).buttonMarkup({theme: 'c'})});
 		$('#playerpage-fullscreen').attr('id','playerpage');
 		$('#player').css("width",$('#playlist').outerWidth());
 		$('#player').css("height",200);
@@ -189,7 +193,7 @@ function initUI(){
 	if(sounDojo.lastFmSettings.scrobbling)
 		$('#scrobbleToggle').val('on').slider("refresh");
 	
-	setTimeout(showHomePage,100);
+	setTimeout(loadHome,100);
 	setTimeout(showLastfmLoginState,1000);
-	$('#lastfmAuthPopup').on({popupbeforeposition:lastFmLoginSecondStep,popupafterclose:lastFmLoginThirdStep});
+	$('#lastfmAuthPopup').on({popupafterclose:function(){clearInterval(authThread);}});
 }

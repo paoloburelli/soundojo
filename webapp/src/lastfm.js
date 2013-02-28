@@ -267,14 +267,14 @@ function findNearEvents(limit, success, fail) {
 	params = {};
 	params.api_key = lastFMapiKey;
 	params.limit = limit;
-	
+
 	if (sounDojo.lastFmSession()) {
 		params.method = "user.getRecommendedEvents";
 		params.sk = sounDojo.lastFmSettings.sessionKey;
 		params.api_sig = getApiSignature(params);
 	} else
 		params.method = "geo.getEvents";
-		
+
 	params.format = "json";
 
 	$.post(lastFmApiBaseURL, params, function(response) {
@@ -291,13 +291,13 @@ function findTopArtists(limit, success, fail) {
 	params.api_key = lastFMapiKey;
 	params.limit = limit;
 	params.format = "json";
-	
+
 	if (sounDojo.lastFmSession()) {
 		params.method = "user.getTopArtists";
 		params.user = sounDojo.lastFmSettings.username;
 	} else
 		params.method = "chart.getTopArtists";
-		
+
 	$.post(lastFmApiBaseURL, params, function(response) {
 		response = parseJson(response);
 		if (response.topartists !== undefined)
@@ -314,13 +314,13 @@ function findTopTracks(limit, success, fail) {
 	params.api_key = lastFMapiKey;
 	params.limit = limit;
 	params.format = "json";
-	
+
 	if (sounDojo.lastFmSession()) {
 		params.method = "user.getTopTracks";
 		params.user = sounDojo.lastFmSettings.username;
 	} else
 		params.method = "chart.getTopTracks";
-		
+
 	$.post(lastFmApiBaseURL, params, function(response) {
 		response = parseJson(response);
 		if (response.toptracks !== undefined)
@@ -342,7 +342,7 @@ function lastfmAuthGetToken(success, fail) {
 	});
 }
 
-function lastfmAuthGetSession(token,success, fail) {
+function lastfmAuthGetSession(token, success, fail) {
 	params = {};
 	params.api_key = lastFMapiKey;
 	params.method = "auth.getSession";
@@ -360,14 +360,15 @@ function lastfmAuthGetSession(token,success, fail) {
 }
 
 var lastFMstep1token;
+var authThread;
+
 function lastFmLogin() {
 	if (sounDojo.lastFmSession())
 		sounDojo.lastFmSession(null);
 	else {
 		lastfmAuthGetToken(function(token) {
 			lastFMstep1token = token;
-			$('#lastfmAuthPopup').append('<iframe id="lastfmAuthPage" src="" width="850" height="650" seamless></iframe>');
-			$('#lastfmAuthPopup').popup("open");
+			lastFmLoginSecondStep();
 		}, function() {
 			showLastfmLoginState();
 		});
@@ -375,16 +376,22 @@ function lastFmLogin() {
 }
 
 function lastFmLoginSecondStep() {
+	$("#lastfmAuthPage").remove();
+	$('#lastfmAuthPopup').append('<iframe id="lastfmAuthPage" src="" width="850" height="650" seamless></iframe>');
 	$('#lastfmAuthPage').attr("src", "http://www.last.fm/api/auth/?api_key=" + lastFMapiKey + "&token=" + lastFMstep1token);
+	$('#lastfmAuthPopup').popup("open", {
+		history : false
+	});
+	authThread = setInterval(lastFmLoginThirdStep, 2000);
 }
 
 function lastFmLoginThirdStep() {
-	lastfmAuthGetSession(lastFMstep1token, 
-	function(session) {
-			sounDojo.lastFmSession(session.key, session.name);
-	},
-	function(code, message) {
-			sounDojo.lastFmSession(null);
+	lastfmAuthGetSession(lastFMstep1token, function(session) {
+		clearInterval(authThread);
+		$('#lastfmAuthPopup').popup("close");
+		$('#lastfmAuthPopup').popup("close");
+		sounDojo.lastFmSession(session.key, session.name);
+	}, function(code, message) {
+		showLastfmLoginState();
 	});
-	$("#lastfmAuthPage").remove();
 }

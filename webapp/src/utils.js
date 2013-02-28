@@ -42,3 +42,19 @@ function refreshPage() {
 	$('#main').page();
 	$( "div[data-role=page]" ).page( "destroy" ).page();
 }
+
+var changeListViewElementTheme = function(selector, theme){
+    try {
+        $(selector).each(function(){
+            try {
+               $(this).buttonMarkup({theme: theme});
+            }catch(exignore){
+                //silent catch because this will fail for non initialized lists
+                //but thats ok
+            }
+        });
+    }
+    catch (ex) {
+        alert(ex);
+    }
+}

@@ -54,12 +54,12 @@ function onYouTubePlayerAPIReady() {
 	
 	sounDojo.onLastFmLogin = function() {
 			showLastfmLoginState();
-			setTimeout(showHomePage, 100);
+			setTimeout(loadHome, 100);
 	}
 
 	sounDojo.onLastFmLogout = function() {
 			showLastfmLoginState();
-			setTimeout(showHomePage, 100);
+			setTimeout(loadHome, 100);
 	}
 
 	sounDojo.init();
