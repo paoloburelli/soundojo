@@ -44,7 +44,7 @@
 			</div>
 
 			<div data-role="popup" id="lastfmAuthPopup" data-overlay-theme="a" data-theme="c" data-tolerance="15,15" class="ui-content">
-				<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+				<a href="##" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right" onclick="$('#lastfmAuthPopup').popup('close'); $('#lastfmAuthPopup').popup('close');">Close</a>
 				<h3>Authorize SounDojo and close the popup window.</h3>
 			</div>
 
@@ -60,14 +60,14 @@
 			<div data-role="panel" id="settingspanel" data-position="right"  data-theme="a">
 				<div data-role="fieldcontain" class="headField">
 					<label for="lastfmLoginButton"><h3>Last.fm</h3></label>
-					<select name="lastfmLoginState" id="lastfmLoginButton" data-role="slider" onchange="lastFmLogin(value)">
+					<select name="lastfmLoginState" id="lastfmLoginButton" data-role="slider" onchange="lastFmLogin(value); setTimeout(function(){$( '#settingspanel' ).panel( 'close' );},100);">
 						<option value="off">Login</option>
 						<option value="on">Logout</option>
 					</select>
 				</div>
 				<div data-role="fieldcontain" class="subField">
 					<label for="scrobbleToggle">Scrobbling</label>
-					<select name="scrobbleToggle" id="scrobbleToggle" data-role="slider" onchange="sounDojo.lastFmScrobbling(value=='on')">
+					<select name="scrobbleToggle" id="scrobbleToggle" data-role="slider" onchange="sounDojo.lastFmScrobbling(value=='on'); setTimeout(function(){$( '#settingspanel' ).panel( 'close' );},100);">
 						<option value="off">Enable</option>
 						<option value="on">Disable</option>
 					</select>
@@ -91,6 +91,11 @@
 				<div id="playerpage" class="content-secondary ui-body-c animated" data-theme="c">
 					<a id="trackInfoButton" data-role="button" data-theme="a" data-mini="true" data-icon="info" data-iconpos="notext"></a>
 					<div id="player" class="animated"></div>
+					<ul data-role="listview" id="playlist" class="animated" data-theme="c" data-split-theme="c"></ul>
+				</div>
+			</div>
+
+			<div data-role="footer" id="footer">
 					<div id="controls" data-role="controlgroup" data-type="horizontal">
 						<a id="prev" data-theme="a" data-role="button" data-inline="true" onClick="sounDojo.prev()">Prev</a>
 						<a id="play" data-theme="a" data-role="button" data-inline="true" onClick="sounDojo.playpause()">Play</a>
@@ -99,11 +104,6 @@
 						<a id="love" data-theme="a" data-role="button" data-inline="true" class="ui-disabled">Love</a>
 						<a id="ban" data-theme="a" data-role="button" data-inline="true" class="ui-disabled">Ban</a>
 					</div>
-					<ul data-role="listview" id="playlist" class="animated" data-theme="c" data-split-theme="c"></ul>
-				</div>
-			</div>
-
-			<div data-role="footer" id="footer">
 				<h4>Powered by&nbsp; <a id="lastfmLink" href="http://www.last.fm" target="_blank" title="Last.fm"><span>Last.fm</span></a><a id="youtubeLink" href="http://www.youtube.com" target="_blank" title="YouTube"><span>YouTube</span></a><a id="githubLink" href="https://github.com/paoloburelli/SounDoJo" title="SounDojo on GitHub" target="_blank"><span>GitHub</span></a></h4>
 			</div>
 		</div>

@@ -9,7 +9,7 @@ div {
 	bottom: 0px;
 	left: 0px;
 	border: #b0b0b0 1px solid;
-	right: 340px;
+	right: 320px;
 	text-align: center;
 	background-color: white;
 }
@@ -38,7 +38,7 @@ div {
 	color: #2489ce;
 }
 
-.clickable:hover, #infopage a:hover {
+.clickable:hover {
 	background-color: #eff5ff;
 	border-radius: 5px;
 }
@@ -100,7 +100,7 @@ div {
 	bottom: 0px;
 	top: 0px;
 	left: 0px;
-	right: 340px;
+	right: 320px;
 	padding: 10px;
 	/*min-width: 600px;*/
 	z-index: 2;
@@ -142,7 +142,7 @@ div {
 	bottom: 0px;
 	top: 0px;
 	right: 0px;
-	width: 340px;
+	width: 320px;
 	border: none;
 }
 
@@ -152,18 +152,18 @@ div {
 	bottom:0px;
 	right:0px;
 	overflow-y:scroll;
-	width:340px;
+	width:320px;
 	margin: 0px;
 	-webkit-overflow-scrolling:touch;
 }
 
 #playerpage #playlist {
 	position: absolute;
-	top: 250px;
+	top: 200px;
 	bottom:0px;
 	right:0px;
 	overflow-y:scroll;
-	width:340px;
+	width:320px;
 	margin: 0px;
 	-webkit-overflow-scrolling:touch;
 }
@@ -176,7 +176,7 @@ div {
 }
 
 #playerpage #player {
-	width:340px;
+	width:320px;
 	height:200px;
 	position:absolute;
 	right: 0px;
@@ -186,11 +186,11 @@ div {
 #playerpage-fullscreen #player {
 	position:absolute;
 	top: 0px;
-	right: 340px;
+	right: 320px;
 }
 
-#playerpage #controls {
-	width: 340px;
+/*#playerpage #controls {
+	width: 320px;
 	height: 50px;
 	position: relative;
 	top: 200px;
@@ -205,12 +205,22 @@ div {
 	position:absolute;
 	height: 50px;
 	bottom: 0px;
-	right: 340px;
+	right: 320px;
 	left: 0px;
 	text-align: center;
 	background-color:black;
 	border-radius: 0px;
 	margin:0px;
+}*/
+
+#controls {
+	position: absolute;
+	display: block;
+	bottom: 2px;
+	padding: 0px;
+	margin: 0px;
+	right: 15px;
+	height: 37px;
 }
 
 #controls .ui-btn.ui-first-child {
@@ -229,7 +239,14 @@ border-bottom-right-radius: .6em;
 
 
 #controls a {
-	margin: 4px 1px 1px 1px;
+	margin: 0px;
+	padding: 0px;
+}
+
+#controls a span {
+	height: 37px;
+	width: 25px;
+	/*padding: 7px 0px 7px 0px;*/
 }
 
 #controls .ui-btn-text {
@@ -273,7 +290,7 @@ border-bottom-right-radius: .6em;
 	background-size: 50% 70%;
 }
 
-#footer a {
+.ui-title a {
 	padding: 0px;
 	margin: 0px;
 	background-position: center center;
@@ -281,12 +298,14 @@ border-bottom-right-radius: .6em;
 	background-size: 90% 100%;
 }
 
-#footer span {
+.ui-title span {
 	visibility: hidden;
 }
 
 #footer h4{
-	text-align: right;
+	text-align: left;
+	font-size: small;
+	margin: 12px;
 }
 
 #footer #lastfmLink { background-image: url('../img/lastfm.gif');}
@@ -423,6 +442,10 @@ border-bottom-right-radius: .6em;
 
 #defaultPage #gigs li {
 	background-color: transparent;
+}
+
+#personalTags a {
+	margin-right: 1em;
 }
 
 #infopage {

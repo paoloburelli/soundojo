@@ -9,71 +9,74 @@ function SounDojo() {
 	this.youTubePlayer
 	this.currentTrackIndex = 0;
 	this.lastFmSettings = {
-		sessionKey: null,
-		scrobbling: false,
-		username: ""
+		sessionKey : null,
+		scrobbling : false,
+		username : ""
 	}
 
 	/** Methods **/
-	this.save = function(){
-			$.jStorage.set("SounDojo.saved",true);
-			$.jStorage.set("SounDojo.playerTime",this.youTubePlayer.getCurrentTime());
-			$.jStorage.set("SounDojo.searchResults", this.searchResults);
-			$.jStorage.set("SounDojo.trackList", this.trackList);
-			$.jStorage.set("SounDojo.currentTrackIndex", this.currentTrackIndex);
-			$.jStorage.set("SounDojo.lastFmSettings", this.lastFmSettings);
+	this.save = function() {
+		$.jStorage.set("SounDojo.saved", true);
+		if (this.youTubePlayer !== undefined)
+			$.jStorage.set("SounDojo.playerTime", this.youTubePlayer.getCurrentTime());
+		$.jStorage.set("SounDojo.searchResults", this.searchResults);
+		$.jStorage.set("SounDojo.trackList", this.trackList);
+		$.jStorage.set("SounDojo.currentTrackIndex", this.currentTrackIndex);
+		$.jStorage.set("SounDojo.lastFmSettings", this.lastFmSettings);
 	}
-	
-	this.load = function(){
-		if ($.jStorage.get("SounDojo.saved")){
+
+	this.load = function() {
+		if ($.jStorage.get("SounDojo.saved")) {
 			this.searchResults = $.jStorage.get("SounDojo.searchResults");
 			this.trackList = $.jStorage.get("SounDojo.trackList");
 			this.currentTrackIndex = $.jStorage.get("SounDojo.currentTrackIndex");
 			this.lastFmSettings = $.jStorage.get("SounDojo.lastFmSettings");
 			this.onSearchCompleted()
 			this.onTracklistLoadingCompleted();
-			
-			this.resumePlayingTime = $.jStorage.get("SounDojo.playerTime");
-			this.updatePlayer(this.currentTrackIndex);
-			return true;
-		} else
-			return false;
+
+			if (this.trackList.length > 0) {
+				this.resumePlayingTime = $.jStorage.get("SounDojo.playerTime");
+				this.updatePlayer(this.currentTrackIndex);
+				return true;
+			}
+		}
+		return false;
 	}
-	
-	this.lastFmSession = function(sessionKey,username) {
-		if(username !== undefined)
+
+	this.lastFmSession = function(sessionKey, username) {
+		if (username !== undefined)
 			this.lastFmSettings.username = username;
-		
+
 		if (sessionKey === undefined)
 			return this.lastFmSettings.sessionKey;
 		else {
 			this.lastFmSettings.sessionKey = sessionKey;
-			
-			if (sessionKey === null){
+
+			if (sessionKey === null) {
 				this.lastFmSettings.scrobbling = false;
-				this.lastFmSettings.username="";
+				this.lastFmSettings.username = "";
 				this.onLastFmLogout();
-			}else
+			} else
 				this.onLastFmLogin();
 		}
 		this.save();
 	}
-	
-	this.lastFmScrobbling = function(state){
+
+	this.lastFmScrobbling = function(state) {
 		this.lastFmSettings.scrobbling = state;
 		this.save();
 	}
-	
+
 	this.isTrackListEmpty = function() {
 		return this.trackList.length == 0;
 	}
-	
+
 	this.removeTrack = function(index) {
 		delete (this.trackList[index]);
-	
-		if(this.trackList.length == 1)
+
+		if (this.trackList.length == 1)
 			this.trackList = [];
-			
+
 		this.save();
 	}
 
@@ -89,8 +92,8 @@ function SounDojo() {
 				break;
 			case 1:
 				clearTimeout(this.notPlayingTimeout);
-				if (this.resumePlayingTime !== undefined){
-					this.youTubePlayer.seekTo(this.resumePlayingTime,true);
+				if (this.resumePlayingTime !== undefined) {
+					this.youTubePlayer.seekTo(this.resumePlayingTime, true);
 					this.resumePlayingTime = undefined;
 				}
 				this.save();
@@ -102,7 +105,7 @@ function SounDojo() {
 
 		if (event.data != 1)
 			this.onPause();
-			
+
 	}
 
 	this.playVideo = function(id) {
@@ -118,6 +121,9 @@ function SounDojo() {
 				},
 				videoId : id,
 				events : {
+					'onReady' : function() {
+						myself.youTubePlayer.unMute()
+					},
 					'onStateChange' : function(event) {
 						myself.playerStateChange(event);
 					}
@@ -131,16 +137,16 @@ function SounDojo() {
 	}
 
 	this.updatePlayer = function(index) {
-		while (this.trackList[index] === undefined)
+		while (index < this.trackList.length - 1 && this.trackList[index] === undefined)
 		index++;
 
 		this.currentTrackIndex = index;
 		var myself = this;
-		
+
 		var artist = this.trackList[index].artist;
-			if (this.trackList[index].artist.name !== undefined)
+		if (this.trackList[index].artist.name !== undefined)
 			artist = this.trackList[index].artist.name;
-		
+
 		findTopVideo(artist + '%20' + this.trackList[index].name, function(id) {
 			myself.playVideo(id);
 		}, function() {
@@ -204,10 +210,10 @@ function SounDojo() {
 			myself.onSearchCompleted();
 		});
 	}
-	
+
 	this.listen = function(type, param) {
 		var myself = this;
-		
+
 		myself.onTracklistLoadingStarted();
 
 		if (type == 'artist') {
@@ -239,10 +245,10 @@ function SounDojo() {
 			});
 		} else if (type == 'trackRadio') {
 			findSimilarTracks(param, function(tracksFound) {
-				
-				var update=true;
+
+				var update = true;
 				if (myself.trackList.length != 0 && myself.trackList[myself.currentTrackIndex].name == param.name)
-					update=false;
+					update = false;
 
 				myself.currentTrackIndex = 0;
 				myself.trackList = tracksFound;
@@ -288,7 +294,8 @@ function SounDojo() {
 
 	this.queue = function(type, param) {
 		startWaiting();
-
+		var myself = this;
+		
 		if (type === 'album') {
 			getAlbumInfo(param, function(albumInfo) {
 				albumInfo.tracks.track.forEach(function(element) {
@@ -311,7 +318,6 @@ function SounDojo() {
 				myself.updatePlayer(0);
 		}
 	}
-
 	/** Events **/
 	this.onVideoLoaded = function() {
 	};
@@ -334,9 +340,8 @@ function SounDojo() {
 	this.onLastFmLogout = function() {
 	};
 
-	
 	/** Constructor **/
-	this.init = function(){
+	this.init = function() {
 		if (!this.load()) {
 			var myself = this;
 			this.youTubePlayer = new YT.Player('player', {
@@ -358,8 +363,10 @@ function SounDojo() {
 				}
 			});
 		}
-		
-		var myself=this;
-		setInterval(function(){myself.save()},10000);
+
+		var myself = this;
+		setInterval(function() {
+			myself.save()
+		}, 10000);
 	}
 }

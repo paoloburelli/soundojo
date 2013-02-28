@@ -58,13 +58,6 @@ function fillWithContent(artist,content,tag){
 	        });
 }
 
-function showHomePage() {
-	if (sounDojo.lastFmSession())
-		showPersonalPage();
-	else
-		showDefaultPage();
-}
-
 function showDefaultPage() {
 	startWaiting();
 	
@@ -333,13 +326,20 @@ function showTrackPage(artistName,trackName) {
 		          alt: queryResult.album.name+" Cover"
 		        });
 		     	$('#albumName').text(queryResult.album.title);
-		     }
+		    } else {
+		    	$('#portrait').attr({ 
+		          src: "img/logobg.png"
+		        });
+		        $('#albumName').text("Unknown");
+		    }
 
 	        $('#bandName').click(function(){showArtistPage(queryResult.artist);});
 	        
 	        queryResult.artist = queryResult.artist.name;
 	        
 	        $('#bandName').text(queryResult.artist);
+	       	
+	       	if (queryResult.album !== undefined) 
 	        	$('#albumName').click(function(){showAlbumPage(queryResult.album);});
 
 	        $('#trackName').text(queryResult.name);
@@ -379,5 +379,8 @@ function showTrackPage(artistName,trackName) {
 }
 
 function loadHome(){
-	showDefaultPage();
+	if (sounDojo.lastFmSession())
+		showPersonalPage();
+	else
+		showDefaultPage();
 }
