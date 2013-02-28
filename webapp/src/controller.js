@@ -1,18 +1,18 @@
 var sounDojo;
 
-var timeout;
+var searchTimeout;
 function delayedSearch(value) {
 	sounDojo.onSearchStarted();
-	if (timeout !== undefined)
-		window.clearTimeout(timeout);
-	timeout = setTimeout(function() {
+	if (searchTimeout !== undefined)
+		window.clearTimeout(searchTimeout);
+	searchTimeout = setTimeout(function() {
 		sounDojo.search(value);
 	}, 1000);
 }
 
-function onYouTubePlayerAPIReady() {
+$(document).ready(function() {
 	sounDojo = new SounDojo();
-	
+
 	sounDojo.onPlay = function() {
 		if (document.getElementById('play') != null)
 			document.getElementById('play').id = 'pause';
@@ -47,28 +47,28 @@ function onYouTubePlayerAPIReady() {
 			refillTrackList();
 		else
 			showLoadingError(param);
-		
+
 		stopWaiting();
 	}
-	
+
 	sounDojo.onLastFmLogin = function() {
-			showLastfmLoginState();
-			setTimeout(loadHome, 100);	
+		showLastfmLoginState();
+		setTimeout(loadHome, 100);
 	}
 
 	sounDojo.onLastFmLogout = function() {
-			showLastfmLoginState();
-			setTimeout(loadHome, 100);
+		showLastfmLoginState();
+		setTimeout(loadHome, 100);
 	}
 
-	sounDojo.onTrackLoved = function(track,artist) {
-			showInfo("You loved "+track,"img/controls-love.png");
+	sounDojo.onTrackLoved = function(track, artist) {
+		showInfo("You loved " + track, "img/controls-love.png");
 	}
 
-	sounDojo.onTrackBanned = function(track,artist) {
-			showInfo("You banned "+track,"img/controls-ban.png");
+	sounDojo.onTrackBanned = function(track, artist) {
+		showInfo("You banned " + track, "img/controls-ban.png");
 	}
-
+	
 	sounDojo.init();
 	initUI();
-}
+});
