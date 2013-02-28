@@ -21,6 +21,17 @@ function stopWaiting() {
 	}
 }
 
+function showInfo(message,iconUrl){
+	if (iconUrl !== undefined)
+		$( "#infoPopup img" ).attr({src:iconUrl});
+	else
+		$( "#infoPopup img" ).attr({src:"img/info.png"});
+		
+	$( "#infoPopup p" ).text(message);
+	$( "#infoPopup" ).popup( "open");
+	setTimeout(function() {$( "#infoPopup" ).popup( "close");},4000);
+}
+
 function removeTrack(index) {
 	if (index == sounDojo.currentTrackIndex)
 		next();
@@ -177,10 +188,14 @@ function showLastfmLoginState() {
 	if (sounDojo.lastFmSession()){
 		$('#lastfmLoginButton').val('on').slider("refresh");
 		$('#scrobbleToggle').slider('enable');
+		$('#love').removeClass('ui-disabled');
+		$('#ban').removeClass('ui-disabled');
 	}else {
 		$('#lastfmLoginButton').val('off').slider("refresh");
 		$('#scrobbleToggle').val('off').slider("refresh");
 		$('#scrobbleToggle').slider('disable');
+		$('#love').addClass('ui-disabled');
+		$('#ban').addClass('ui-disabled');
 	}
 }
 

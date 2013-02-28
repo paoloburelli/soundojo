@@ -101,6 +101,10 @@ function showPersonalPage() {
 	        
 	        $('h2').text('Welcome '+sounDojo.lastFmSettings.username);
 	        
+	        $('#playLoved').click(function(){sounDojo.listen("loved");});
+	        $('#playLibrary').click(function(){sounDojo.listen("library");});
+	        $('#playRecommended').click(function(){sounDojo.listen("recommended");});
+	        
 	        getUserInfo(sounDojo.lastFmSettings.username,function(user){
 				$('#userPortrait').attr({ 
 		          src: user.image[1]["#text"],
@@ -148,7 +152,16 @@ function showPersonalPage() {
 		        	$('#top10 #'+id).click(function(){showTrackPage(element.artist.name,element.name);});
 		        	$('#top10 ol').listview('refresh')
 		        });
-	        },function(){});       
+	        },function(){});    
+	        
+	        getRecentTracks(sounDojo.lastFmSettings.username,3,function(tracks){
+		        tracks.forEach(function(element){
+		        	var id = element.name.replace(/[_\W]+/g, "-");
+		        	$('#recents ul').append("<li id='"+id+"' class='trackLink'><a>"+element.artist['#text']+" - "+element.name+"</a></li>");
+		        	$('#recents #'+id).click(function(){showTrackPage(element.artist['#text'],element.name);});
+		        	$('#recents ul').listview('refresh')
+		        });
+	        },function(){});      
 	        
 	        stopWaiting();
     });

@@ -332,6 +332,133 @@ function findTopTracks(limit, success, fail) {
 	});
 }
 
+function getLibraryTracks(username,limit, success, fail){
+	params = {};
+	params.api_key = lastFMapiKey;
+	params.method = "library.getTracks";
+	params.user = username;
+	params.format = "json";
+	params.limit = limit;
+
+	$.post(lastFmApiBaseURL, params, function(response) {
+		response = parseJson(response);
+		if (response.tracks !== undefined)
+			success(response.tracks.track);
+		else
+			fail();
+	});
+}
+
+function getRecommendedArtists(limit, success, fail){
+	params = {};
+	params.api_key = lastFMapiKey;
+	params.method = "user.getRecommendedArtists";
+	params.limit = limit;
+	params.sk = sounDojo.lastFmSettings.sessionKey;
+	params.api_sig = getApiSignature(params);
+	params.format = "json";
+
+	$.post(lastFmApiBaseURL, params, function(response) {
+		response = parseJson(response);
+		if (response.recommendations !== undefined)
+			success(response.recommendations.artist);
+		else
+			fail();
+	});
+}
+
+function getLovedTracks(username,limit, success, fail){
+	params = {};
+	params.api_key = lastFMapiKey;
+	params.method = "user.getLovedTracks";
+	params.user = username;
+	params.format = "json";
+	params.limit = limit;
+
+	$.post(lastFmApiBaseURL, params, function(response) {
+		response = parseJson(response);
+		if (response.lovedtracks !== undefined)
+			success(response.lovedtracks.track);
+		else
+			fail();
+	});
+}
+
+function getRecentTracks(username,limit, success, fail){
+	params = {};
+	params.api_key = lastFMapiKey;
+	params.method = "user.getRecentTracks";
+	params.user = username;
+	params.format = "json";
+	params.limit = limit;
+
+	$.post(lastFmApiBaseURL, params, function(response) {
+		response = parseJson(response);
+		if (response.recenttracks !== undefined)
+			success(response.recenttracks.track);
+		else
+			fail();
+	});
+}
+
+function loveTrack(trackName,artistName, success, fail){
+	params = {};
+	params.api_key = lastFMapiKey;
+	params.method = "track.love";
+	params.track = trackName;
+	params.artist = artistName;
+	params.sk = sounDojo.lastFmSettings.sessionKey;
+	params.api_sig = getApiSignature(params);
+	params.format = "json";
+
+	$.post(lastFmApiBaseURL, params, function(response) {
+		response = parseJson(response);
+		if (response.status == 'ok')
+			success();
+		else
+			fail();
+	});
+}
+
+function banTrack(trackName,artistName, success, fail){
+	params = {};
+	params.api_key = lastFMapiKey;
+	params.method = "track.ban";
+	params.track = trackName;
+	params.artist = artistName;
+	params.sk = sounDojo.lastFmSettings.sessionKey;
+	params.api_sig = getApiSignature(params);
+	params.format = "json";
+
+	$.post(lastFmApiBaseURL, params, function(response) {
+		response = parseJson(response);
+		if (response.status == 'ok')
+			success();
+		else
+			fail();
+	});
+}
+
+function scrobbleTrack(trackName,artistName,timestamp, success, fail){
+	params = {};
+	params.api_key = lastFMapiKey;
+	params.method = "track.scrobble";
+	params.track = trackName;
+	params.artist = artistName;
+	params.timestamp = timestamp
+	params.sk = sounDojo.lastFmSettings.sessionKey;
+	params.api_sig = getApiSignature(params);
+	params.format = "json";
+
+	$.post(lastFmApiBaseURL, params, function(response) {
+		response = parseJson(response);
+		if (response.status == 'ok')
+			success();
+		else
+			fail();
+	});
+}
+
 function lastfmAuthGetToken(success, fail) {
 	$.get(lastFmGetAuthTokenURL, function(response) {
 		response = parseJson(response);

@@ -67,6 +67,28 @@ function SounDojo() {
 		this.save();
 	}
 
+	this.loveCurrent = function() {
+		if (this.trackList.length > 0)
+			var ctName = this.trackList[this.currentTrackIndex].name;
+		var ctArtist = this.trackList[this.currentTrackIndex].artist;
+		var myself = this;
+		loveTrack(ctName, ctArtist, function() {
+			myself.onTrackLoved(ctName, ctArtist);
+		}, function() {
+		});
+	}
+
+	this.banCurrent = function() {
+		if (this.trackList.length > 0)
+			var ctName = this.trackList[this.currentTrackIndex].name;
+		var ctArtist = this.trackList[this.currentTrackIndex].artist;
+		var myself = this;
+		banTrack(ctName, ctArtist, function() {
+			myself.onTrackBanned(ctName, ctArtist);
+		}, function() {
+		});
+	}
+
 	this.isTrackListEmpty = function() {
 		return this.trackList.length == 0;
 	}
@@ -108,7 +130,9 @@ function SounDojo() {
 
 	}
 
+	this.scrobbleTimeout
 	this.playVideo = function(id) {
+
 		if (this.youTubePlayer === undefined || this.youTubePlayer.loadVideoById === undefined) {
 			var myself = this;
 			this.youTubePlayer = new YT.Player('player', {
@@ -132,6 +156,18 @@ function SounDojo() {
 		} else {
 			this.youTubePlayer.loadVideoById(id);
 			this.youTubePlayer.unMute();
+		}
+
+		if (this.lastFmSettings.scrobbling) {
+			var ctName = this.trackList[this.currentTrackIndex].name;
+			var ctArtist = this.trackList[this.currentTrackIndex].artist;
+			var curUnixTime = Math.round(new Date().getTime() / 1000);
+			clearTimeout(this.scrobbleTimeout);
+			this.scrobbleTimeout = setTimeout(function() {
+				scrobbleTrack(ctName, ctArtist, curUnixTime, function() {
+				}, function() {
+				});
+			}, 90000);
 		}
 		this.onVideoLoaded();
 	}
@@ -217,7 +253,7 @@ function SounDojo() {
 		myself.onTracklistLoadingStarted();
 
 		if (type == 'artist') {
-			findArtistTopTracks(param, TopArtistTracksLimit, function(toptracks) {
+			findArtistTopTracks(param, 100, function(toptracks) {
 				myself.currentTrackIndex = 0;
 				myself.trackList = toptracks;
 				myself.trackList.sort(function() {
@@ -289,13 +325,72 @@ function SounDojo() {
 			}, function() {
 				myself.onTracklistLoadingCompleted("No tracks found for this tag")
 			});
+		} else if (type == 'loved') {
+			getLovedTracks(this.lastFmSettings.username, 100, function(toptracks) {
+				myself.currentTrackIndex = 0;
+				myself.trackList = toptracks;
+				myself.trackList.sort(function() {
+					if (Math.random() < .5)
+						return -1;
+					else
+						return 1;
+				});
+				myself.onTracklistLoadingCompleted();
+				myself.updatePlayer(0);
+			}, function() {
+				myself.onTracklistLoadingCompleted("No loved tracks found")
+			});
+		} else if (type == 'library') {
+			getLibraryTracks(this.lastFmSettings.username, 300, function(toptracks) {
+				myself.currentTrackIndex = 0;
+				myself.trackList = toptracks;
+				myself.trackList.sort(function() {
+					if (Math.random() < .5)
+						return -1;
+					else
+						return 1;
+				});
+				myself.onTracklistLoadingCompleted();
+				myself.updatePlayer(0);
+			}, function() {
+				myself.onTracklistLoadingCompleted("No tracks found in your library")
+			});
+		} else if (type == 'recommended') {
+			getLibraryTracks(this.lastFmSettings.username, 100, function(toptracks) {
+				myself.currentTrackIndex = 0;
+				myself.trackList = toptracks;
+				var index = 0;
+				getRecommendedArtists(20, function(artists) {
+					artists.forEach(function(param) {
+						findArtistTopTracks(param, 10, function(toptracks) {
+							myself.trackList = myself.trackList.concat(toptracks);
+							index++;
+							if (index == 20) {
+								myself.trackList.sort(function() {
+									if (Math.random() < .5)
+										return -1;
+									else
+										return 1;
+								});
+								myself.onTracklistLoadingCompleted();
+								myself.updatePlayer(0);
+							}
+						}, function() {
+						});
+					});
+				}, function() {
+					myself.onTracklistLoadingCompleted("No recommended tracks found")
+				});
+			}, function() {
+				myself.onTracklistLoadingCompleted("No recommended tracks found")
+			});
 		}
 	}
 
 	this.queue = function(type, param) {
 		startWaiting();
 		var myself = this;
-		
+
 		if (type === 'album') {
 			getAlbumInfo(param, function(albumInfo) {
 				albumInfo.tracks.track.forEach(function(element) {
@@ -338,6 +433,10 @@ function SounDojo() {
 	this.onLastFmLogin = function() {
 	};
 	this.onLastFmLogout = function() {
+	};
+	this.onTrackLoved = function(track, artist) {
+	};
+	this.onTrackBanned = function(track, artist) {
 	};
 
 	/** Constructor **/

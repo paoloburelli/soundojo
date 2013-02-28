@@ -23,7 +23,7 @@ div {
 	margin: 0px;
 }
 
-#errorPopup {
+#errorPopup, #infoPopup {
 	text-align: center;
 }
 

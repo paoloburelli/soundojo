@@ -43,6 +43,10 @@
 				<img src="img/warning.png"/><p></p>
 			</div>
 
+			<div data-role="popup" id="infoPopup" data-transition="pop" class="ui-content">
+				<img src="img/info.png"/><p></p>
+			</div>
+
 			<div data-role="popup" id="lastfmAuthPopup" data-overlay-theme="a" data-theme="c" data-tolerance="15,15" class="ui-content">
 				<a href="##" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right" onclick="$('#lastfmAuthPopup').popup('close'); $('#lastfmAuthPopup').popup('close');">Close</a>
 				<h3>Authorize SounDojo and close the popup window.</h3>
@@ -101,8 +105,8 @@
 						<a id="play" data-theme="a" data-role="button" data-inline="true" onClick="sounDojo.playpause()">Play</a>
 						<a id="next" data-theme="a" data-role="button" data-inline="true" onClick="sounDojo.next()">Next</a>
 						<a id="fullscreen" data-theme="a" data-role="button" data-inline="true" onClick="toggleFullScreen()">Love</a>
-						<a id="love" data-theme="a" data-role="button" data-inline="true" class="ui-disabled">Love</a>
-						<a id="ban" data-theme="a" data-role="button" data-inline="true" class="ui-disabled">Ban</a>
+						<a id="love" data-theme="a" data-role="button" data-inline="true" onClick="sounDojo.loveCurrent()">Love</a>
+						<a id="ban" data-theme="a" data-role="button" data-inline="true" onClick="sounDojo.banCurrent(); sounDojo.next();">Ban</a>
 					</div>
 				<h4>Powered by&nbsp; <a id="lastfmLink" href="http://www.last.fm" target="_blank" title="Last.fm"><span>Last.fm</span></a><a id="youtubeLink" href="http://www.youtube.com" target="_blank" title="YouTube"><span>YouTube</span></a><a id="githubLink" href="https://github.com/paoloburelli/SounDoJo" title="SounDojo on GitHub" target="_blank"><span>GitHub</span></a></h4>
 			</div>

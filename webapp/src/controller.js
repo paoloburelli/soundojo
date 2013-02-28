@@ -1,4 +1,3 @@
-var TopArtistTracksLimit = 100;
 var sounDojo;
 
 var timeout;
@@ -54,12 +53,20 @@ function onYouTubePlayerAPIReady() {
 	
 	sounDojo.onLastFmLogin = function() {
 			showLastfmLoginState();
-			setTimeout(loadHome, 100);
+			setTimeout(loadHome, 100);	
 	}
 
 	sounDojo.onLastFmLogout = function() {
 			showLastfmLoginState();
 			setTimeout(loadHome, 100);
+	}
+
+	sounDojo.onTrackLoved = function(track,artist) {
+			showInfo("You loved "+track,"img/controls-love.png");
+	}
+
+	sounDojo.onTrackBanned = function(track,artist) {
+			showInfo("You banned "+track,"img/controls-ban.png");
 	}
 
 	sounDojo.init();

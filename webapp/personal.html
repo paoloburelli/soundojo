@@ -1,19 +1,19 @@
 <div id="defaultPage">
 	<img id="userPortrait"/><h2 id="userWelcome">Personal</h2>
 	<div class="ui-grid-b">
-		<div class="ui-block-a" style="max-width:150px">
+		<div class="ui-block-a" style="max-width:200px">
 			<button type="button" data-theme="c" id="playLibrary" data-icon="arrow-r">
-				Library
+				Your Library
 			</button>
 		</div>
-		<div class="ui-block-b" style="max-width:250px">
-			<button type="button" data-theme="c" id="playReccomended" data-icon="arrow-r">
-				Reccomended Tracks
-			</button>
-		</div>
-		<div class="ui-block-c" style="max-width:250px">
-			<button type="button" data-theme="c" id="playReccomended" data-icon="arrow-r">
+		<div class="ui-block-b" style="max-width:200px">
+			<button type="button" data-theme="c" id="playLoved" data-icon="arrow-r">
 				Loved Tracks
+			</button>
+		</div>
+		<div class="ui-block-c" style="max-width:150px">
+			<button type="button" data-theme="c" id="playRecommended" data-icon="bars">
+				Explore
 			</button>
 		</div>
 	</div>
@@ -29,6 +29,9 @@
 			</div>
 		</div>
 		<div class="ui-block-b">
+			<div id="recents">
+				<h3>Recently played</h3><ul data-role="listview"></ul>
+			</div>
 			<div id="gigs">
 				<h3>Gigs Near You</h3><ul data-role="listview"></ul>
 			</div>
