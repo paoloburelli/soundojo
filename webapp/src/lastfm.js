@@ -490,7 +490,7 @@ function lastFmLogin() {
 	if (sounDojo.lastFmSession())
 		sounDojo.lastFmSession(null);
 	else {
-		window.open('http://www.last.fm/api/auth/?api_key='+lastFMapiKey+'&cb='+window.location.href);
+		window.location.assign('http://www.last.fm/api/auth/?api_key='+lastFMapiKey+'&cb='+window.location.href);
 	}
 }
 
