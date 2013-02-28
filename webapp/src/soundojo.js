@@ -56,8 +56,10 @@ function SounDojo() {
 				this.lastFmSettings.scrobbling = false;
 				this.lastFmSettings.username = "";
 				this.onLastFmLogout();
-			} else
+			} else {
+				this.lastFmSettings.scrobbling = true;
 				this.onLastFmLogin();
+			}
 		}
 		this.save();
 	}

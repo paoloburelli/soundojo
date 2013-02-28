@@ -190,6 +190,7 @@ function showLastfmLoginState() {
 		$('#scrobbleToggle').slider('enable');
 		$('#love').removeClass('ui-disabled');
 		$('#ban').removeClass('ui-disabled');
+		$('#scrobbleToggle').val('on').slider("refresh");
 	}else {
 		$('#lastfmLoginButton').val('off').slider("refresh");
 		$('#scrobbleToggle').val('off').slider("refresh");
