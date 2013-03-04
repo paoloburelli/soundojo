@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
+#import <WebKit/WebPreferences.h>
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
@@ -15,4 +16,9 @@
 @property (nonatomic, retain) IBOutlet WebView *SounDojo;
 @property (nonatomic, strong) IBOutlet NSImageView *loadingImageView;
 
+@end
+
+@interface WebPreferences (WebPreferencesPrivate)
+- (void)_setLocalStorageDatabasePath:(NSString *)path;
+- (void) setLocalStorageEnabled: (BOOL) localStorageEnabled;
 @end

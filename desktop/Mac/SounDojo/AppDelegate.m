@@ -22,6 +22,9 @@
     [[SounDojo mainFrame] loadRequest:[NSURLRequest requestWithURL:url]];
     [loadingImageView.layer setBackgroundColor:CGColorCreateGenericRGB(0.0, 0.0, 0.0, 1.0)];
     [SounDojo setFrameLoadDelegate:self];
+    WebPreferences* prefs = [SounDojo preferences];
+    [prefs _setLocalStorageDatabasePath:@"~/Library/Application Support/SounDojo"];
+    [prefs setLocalStorageEnabled:YES];
 }
 
 
