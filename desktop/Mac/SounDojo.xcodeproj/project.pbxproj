@@ -15,6 +15,7 @@
 		90676CAA16E0CCBA002452C2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90676CA816E0CCBA002452C2 /* MainMenu.xib */; };
 		9069B2C216E4A1820076D6E1 /* logobig.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069B2C116E4A1820076D6E1 /* logobig.png */; };
 		9069B2CA16E4AF8F0076D6E1 /* MyApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 9069B2C916E4AF8F0076D6E1 /* MyApp.m */; };
+		9069B2CC16E4BC780076D6E1 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9069B2CB16E4BC780076D6E1 /* icon.icns */; };
 		90A9535E16E0CDBA000E3D9E /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 90A9535D16E0CDBA000E3D9E /* icon.png */; };
 		90ACD4DF16E1051F00B6DDFD /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90ACD4DE16E1051F00B6DDFD /* WebKit.framework */; };
 /* End PBXBuildFile section */
@@ -36,6 +37,7 @@
 		9069B2C116E4A1820076D6E1 /* logobig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logobig.png; sourceTree = "<group>"; };
 		9069B2C816E4AF8F0076D6E1 /* MyApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyApp.h; sourceTree = "<group>"; };
 		9069B2C916E4AF8F0076D6E1 /* MyApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyApp.m; sourceTree = "<group>"; };
+		9069B2CB16E4BC780076D6E1 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		90A9535D16E0CDBA000E3D9E /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		90ACD4DE16E1051F00B6DDFD /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -119,6 +121,7 @@
 		90A9535F16E0CF2E000E3D9E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				9069B2CB16E4BC780076D6E1 /* icon.icns */,
 				9069B2C116E4A1820076D6E1 /* logobig.png */,
 				90A9535D16E0CDBA000E3D9E /* icon.png */,
 			);
@@ -181,6 +184,7 @@
 				90676CAA16E0CCBA002452C2 /* MainMenu.xib in Resources */,
 				90A9535E16E0CDBA000E3D9E /* icon.png in Resources */,
 				9069B2C216E4A1820076D6E1 /* logobig.png in Resources */,
+				9069B2CC16E4BC780076D6E1 /* icon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
