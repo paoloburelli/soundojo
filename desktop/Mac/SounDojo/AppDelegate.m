@@ -12,11 +12,14 @@
 
 @synthesize window = _window;
 @synthesize SounDojo;
+@synthesize loadingImageView;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    NSString *urlText = @"/index.html";
-    [[SounDojo mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:urlText]]];
+    NSString *strIndirizzo = @"http://www.soundojo.com/webapp/";
+	NSURL *url = [NSURL URLWithString:strIndirizzo];
+    [[SounDojo mainFrame] loadRequest:[NSURLRequest requestWithURL:url]];
+    [loadingImageView.layer setBackgroundColor:CGColorCreateGenericRGB(0.0, 0.0, 0.0, 1.0)];
 }
 
 @end

@@ -13,5 +13,6 @@
 
 @property (assign) IBOutlet NSWindow *window;
 @property (nonatomic, retain) IBOutlet WebView *SounDojo;
+@property (nonatomic, strong) IBOutlet NSImageView *loadingImageView;
 
 @end
