@@ -18,8 +18,19 @@
 {
     NSString *strIndirizzo = @"http://www.soundojo.com/webapp/";
 	NSURL *url = [NSURL URLWithString:strIndirizzo];
+    SounDojo.hidden = YES;
     [[SounDojo mainFrame] loadRequest:[NSURLRequest requestWithURL:url]];
     [loadingImageView.layer setBackgroundColor:CGColorCreateGenericRGB(0.0, 0.0, 0.0, 1.0)];
+    [SounDojo setFrameLoadDelegate:self];
 }
+
+
+-(void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
+{
+    SounDojo.hidden = NO;
+    loadingImageView.hidden = YES;
+    [SounDojo stringByEvaluatingJavaScriptFromString:@"start();"];
+}
+
 
 @end

@@ -212,4 +212,5 @@ function initUI(){
 	setTimeout(loadHome,100);
 	setTimeout(showLastfmLoginState,1000);
 	$('#lastfmAuthPopup').on({popupafterclose:function(){clearInterval(authThread);}});
+	window.webkitNotifications.requestPermission(function(){});
 }

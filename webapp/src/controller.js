@@ -30,6 +30,11 @@ function start() {
 			if (followCurrentTrack)
 				showArtistPage(sounDojo.trackList[sounDojo.currentTrackIndex].artist);
 			updateTrackList();
+			
+			if (window.webkitNotifications && window.webkitNotifications.checkPermission() == 0) {
+				var notification = window.webkitNotifications.createNotification("/webapp/img/icon.png", sounDojo.trackList[sounDojo.currentTrackIndex].name, sounDojo.trackList[sounDojo.currentTrackIndex].artist);
+				notification.show();
+			}
 		}
 
 		sounDojo.onSearchStarted = function() {
