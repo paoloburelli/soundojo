@@ -79,12 +79,13 @@
 
 			<div data-role="header" id="header">
 				<a href="#searchpanel" data-icon="search" onclick="setTimeout(function(){$('#searchtext').focus()},500)">Search</a>
-				<h1 id="appLogo" ><a onclick="loadHome(); return false;" href="#home" title="SounDojo Home"><img src="img/logosmall.png" alt="SounDojo"/></a></h1>
+				<h1 id="appLogo" ><img src="img/logosmall.png" alt="SounDojo"/></h1>
 				<a href="#settingspanel" data-icon="gear" onclick="setTimeout(function(){$('#lastfmUser').focus()},500)" class="ui-btn-right">Options</a>
 			</div>
 
 			<div data-role="content" id="content">
-
+				
+				<a id="homeButton" data-role="button" data-theme="a" data-mini="true" data-icon="home" data-iconpos="notext" onclick="loadHome(); return false;"></a>
 				<div id="infopage" class="content-primary ui-body ui-body-d"></div>
 
 				<div id="playerpage" class="content-secondary ui-body-c animated" data-theme="c">

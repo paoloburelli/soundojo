@@ -108,6 +108,13 @@ div {
 	-webkit-overflow-scrolling:touch;
 }
 
+#homeButton{
+	z-index: 10;
+	top: 5px;
+	right: 335px;
+	position: absolute;
+}
+
 /**** YouTube Player ****/
 
 .deleteTrackButton {
@@ -120,11 +127,13 @@ div {
 }
 
 #playerpage #trackInfoButton {
-	z-index: 10;
+	z-index: 5;
 	top: 5px;
 	right: 5px;
 	position: absolute;
 }
+
+""
 
 #playerpage-fullscreen {
 	position: absolute;
@@ -187,6 +196,7 @@ div {
 	position:absolute;
 	top: 0px;
 	right: 320px;
+	z-index: 10;
 }
 
 /*#playerpage #controls {
