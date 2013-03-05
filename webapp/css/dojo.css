@@ -419,8 +419,11 @@ border-bottom-right-radius: .6em;
 	text-transform:capitalize;
 }
 
+
 #artist-top #left { width: 50%; max-width: 450px; overflow: hidden;}
 #artist-top #right { width: 50%; padding-left: 10px; max-width: 400px}
+#tagPage #right {max-width: 250px}
+#tagPage #left {max-width: 250px}
 
 #artist-bottom .ui-block-a {width: 70%}
 #artist-bottom .ui-block-b {width: 30%}

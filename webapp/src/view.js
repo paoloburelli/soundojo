@@ -11,6 +11,7 @@ function startWaiting() {
 	if (!waiting){
 		$.mobile.loading('show', {textVisible : true});
 		waiting = true;
+		setTimeout(stopWaiting,10000);
 	}
 }
 
