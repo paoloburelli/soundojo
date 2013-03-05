@@ -16,6 +16,9 @@
 @property (nonatomic, retain) IBOutlet WebView *SounDojo;
 @property (nonatomic, strong) IBOutlet NSImageView *loadingImageView;
 
++ (void)loadLocalStorage;
++ (void)saveLocalStorage;
+
 @end
 
 @interface WebPreferences (WebPreferencesPrivate)

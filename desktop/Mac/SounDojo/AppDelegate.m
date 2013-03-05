@@ -14,17 +14,45 @@
 @synthesize SounDojo;
 @synthesize loadingImageView;
 
+NSString *appUrl=@"http://www.soundojo.com/webapp/";
+NSString *localStorage = @"/Library/Application Support/SounDojo";
+
+
++ (void)loadLocalStorage{
+    NSString *target = [localStorage stringByAppendingString:@"/http_soundojo.com_0.localstorage"];
+    NSString *source = [target stringByAppendingString:@".saved"];
+    [[NSFileManager defaultManager] copyItemAtPath:source  toPath:target error:nil];
+}
+
++ (void)saveLocalStorage{
+    NSString *source = [localStorage stringByAppendingString:@"/http_soundojo.com_0.localstorage"];
+    NSString *target = [source stringByAppendingString:@".saved"];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:source]) {
+        [[NSFileManager defaultManager] removeItemAtPath:target error:nil];
+        [[NSFileManager defaultManager] copyItemAtPath:source  toPath:target error:nil];
+    }
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    NSString *strIndirizzo = @"http://www.soundojo.com/webapp/";
-	NSURL *url = [NSURL URLWithString:strIndirizzo];
+    localStorage = [NSHomeDirectory() stringByAppendingString:localStorage];
+    
+    [AppDelegate loadLocalStorage];
+    
+    WebPreferences* prefs = [SounDojo preferences];
+    [prefs _setLocalStorageDatabasePath:localStorage];
+    [prefs setLocalStorageEnabled:YES];
+    
+	NSURL *url = [NSURL URLWithString:appUrl];
     SounDojo.hidden = YES;
     [[SounDojo mainFrame] loadRequest:[NSURLRequest requestWithURL:url]];
     [loadingImageView.layer setBackgroundColor:CGColorCreateGenericRGB(0.0, 0.0, 0.0, 1.0)];
     [SounDojo setFrameLoadDelegate:self];
-    WebPreferences* prefs = [SounDojo preferences];
-    [prefs _setLocalStorageDatabasePath:@"~/Library/Application Support/SounDojo"];
-    [prefs setLocalStorageEnabled:YES];
+
+}
+
+- (void)applicationWillTerminate:(NSNotification *)aNotification{
+    [AppDelegate saveLocalStorage];
 }
 
 
@@ -32,7 +60,12 @@
 {
     SounDojo.hidden = NO;
     loadingImageView.hidden = YES;
-    [SounDojo stringByEvaluatingJavaScriptFromString:@"start();"];
+    [SounDojo stringByEvaluatingJavaScriptFromString:@"start(); $('#appLogo').css('visibility','hidden')"];
+}
+
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
+{
+    return YES;
 }
 
 @end
