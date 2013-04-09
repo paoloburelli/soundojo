@@ -13,73 +13,56 @@
 	<meta property="og:title" content="SounDoJo music player" /> 
 	<meta property="og:url" content="http://soundojo.com" /> 
 	<meta property="og:description" content="SounDoJo is a web based music player that combines YouTube and Last.fm to discover and play music for free." />  
-	<meta property="og:image" content="http://www.soundojo.com/img/fb.png" /> 
+	<meta property="og:image" content="http://www.soundojo.com/img/webapp/fb.png" /> 
 	
 	<meta name="viewport" content="initial-scale=1.0"/>
 	<meta name="apple-mobile-web-app-capable" content="yes"/>
 	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
 	<meta name="description" content="SounDoJo is a web based music player. It combines multiple on-line services to deliver a great music listening experience. It allows to listen freely to an immense music library and it supports intelligent playlists."/>
 	<meta name="keywords" content="music,last.fm,web player,player,streaming"/>
-	<link rel="apple-touch-icon" href="img/icon.png"/>
-	<link rel="apple-touch-startup-image" media="(device-width: 768px) and (orientation: landscape)" href="img/splash-landscape-ipad.png"/> 
-	<link rel="apple-touch-startup-image" media="(device-width: 768px) and (orientation: portrait)" href="img/splash-portrait-ipad.png"/>
-	<link rel="stylesheet" href="css/style.css" type="text/css">
-	<link rel="shortcut icon" href="img/favicon.ico" />
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-	<script type="text/javascript" src="http://www.youtube.com/player_api"></script>
-	<script type="text/javascript" src="src/communication.js"></script>
-	<script type="text/javascript" src="src/utils.js"></script>
-	<script type="text/javascript" src="src/main.js"> </script>
-	<script type="text/javascript" src="src/mobile.js"></script>
+	<link rel="apple-touch-icon" href="webapp/img/icon.png"/>
+	<link rel="shortcut icon" href="webapp/img/favicon.ico" />
+	
+	<style type="text/css">
+		#logo {
+			margin-bottom: 50px;
+		}
+		#links div {
+			display: inline-block;
+			padding: 30px;
+		}
+		#links a {
+			color: white;
+			font-family: Arial, Helvetica, sans-serif;
+			text-decoration: none;
+		}
+		#links .disabled {
+			color: darkgrey;
+			text-decoration: none;
+		}
+		#description {
+			color: lightgrey;
+			font-family: Arial, Helvetica, sans-serif;
+			font-style: italic;
+		}
+	</style>
+	
 </head>
-<body>
-			<div id="container">
-				<div id="sidebar">
-					<form id="searchbox" action="" onsubmit="return false">
-						<input id="searchtext" type="search" value="type song/artist/genre..." name='query' 
-	onblur="if(this.value=='') { this.value='type song/artist/genre'; this.style.color='grey';}" onfocus="if(this.value=='type song/artist/genre...') { this.value=''; this.style.color='#000000'; this.style.font='normal 12pt Arial'; }"
-						onKeyUp="search()" style="color: grey;"/>
-					</form>
-					<ul id="results"></ul>
-					<div id="player"></div>
-				</div>
-				<div id="content">
-					<div id="musicplayer">
-						<a href="http://www.soundojo.com"><h1 id="logo"><span>SounDoJo Beta</span></h4></a>
-						<div id="statusbar">
-							<p id="curtrack"></p>
-							<p id="curtime"></p>
-						</div>
-						<div id="controls">
-							<div id="prev" onClick="prev()"><span>Prev<span></div>
-							<div id="play" onClick="playpause()"><span>Play<span></div>
-							<div id="next" onClick="next()"><span>Next<span></div>
-						</div>
-					</div>
-					<ul id="tracklist"></ul>
-					<div id="ads">
-						<script type="text/javascript"><!--
-							google_ad_client = "ca-pub-0855451814013375";
-							/* soundojolarge */
-							google_ad_slot = "7991234089";
-							google_ad_width = 728;
-							google_ad_height = 90;
-							//-->
-						</script>
-						<script type="text/javascript"
-						src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-						</script>
-					</div>
-				</div>
-				<div id="footer">
-					<p id="description">SounDoJo music player is hosted on <a href="https://github.com/paoloburelli/SounDoJo" target="_blank">GitHub</a></p>
-					<div id="throbber"></div>
-					<p id="links">Powered by
-						<a href="http://www.youtube.com" target="_blank">YouTube</a> and 
-						<a href="http://www.last.fm"  target="_blank">last.fm</a>
-					</p>
-				</div>
-			</div>
+<body style="text-align: center; background-color: #080808; padding-top: 100px;">
+		<div id="logo"><img src="img/biglogo.png" alt="SounDojo" title="SounDojo Music Player"/></div>
+			<p id="description">
+				SounDoJo: a new way to liste to music.<br/>
+				The SounDojo music player combines multiple on-line services 
+				such as YouTube and Last.fm to deliver a great music listening experience.<br/>
+				You can explore and listen freely to an immense music library 
+				trough intelligent playlists and personalised music suggestions.<br/>
+				Choose your platform and start to listen!
+			</p>
+				<div id="links">
+			<div><a href="webapp" title="Web Player"><img src="img/browser.png"/><p>Web Player<br /><br /></p></a></div>
+			<div><a class="disabled" href="" title="Download Mac Player"><img src="img/mac.png"/><p>Mac Player<br />(Soon Available)</p></a></div>
+			<div><a class="disabled" href="" title="Download Linux Player"><img src="img/linux.png"/><p>Linux Player<br />(Soon Available)</p></a></div>
+			<div><a class="disabled" href="" title="Download Windows Player"><img src="img/windows.png"/><p>Windows Player<br />(Soon Available)</p></a></div>
 		</div>
 		<script type="text/javascript" src="src/analytics.js"></script>
 </html>
