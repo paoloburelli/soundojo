@@ -355,7 +355,7 @@ function getRecommendedArtists(limit, success, fail){
 	params.method = "user.getRecommendedArtists";
 	params.limit = limit;
 	params.sk = sounDojo.lastFmSettings.sessionKey;
-	params.page = parseInt((Math.random() * 10), 10) + 1;
+	params.page = parseInt((Math.random() * 5), 10) + 1;
 	params.api_sig = getApiSignature(params);
 	params.format = "json";
 
