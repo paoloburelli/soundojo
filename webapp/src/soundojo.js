@@ -358,13 +358,13 @@ function SounDojo() {
 				myself.onTracklistLoadingCompleted("No tracks found in your library")
 			});
 		} else if (type == 'recommended') {
-			getLibraryTracks(this.lastFmSettings.username, 100, function(toptracks) {
+			getLibraryTracks(this.lastFmSettings.username, 200, function(toptracks) {
 				myself.currentTrackIndex = 0;
 				myself.trackList = toptracks;
 				var index = 0;
 				getRecommendedArtists(20, function(artists) {
 					artists.forEach(function(param) {
-						findArtistTopTracks(param, 10, function(toptracks) {
+						findArtistTopTracks(param, 5, function(toptracks) {
 							myself.trackList = myself.trackList.concat(toptracks);
 							index++;
 							if (index == 20) {
